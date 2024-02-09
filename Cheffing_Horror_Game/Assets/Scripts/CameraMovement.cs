@@ -12,6 +12,8 @@ public class CameraMovement : MonoBehaviour
     float xRotation=0,yRotation = 0f;
 
     private Rigidbody rb;
+
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -32,21 +34,26 @@ public class CameraMovement : MonoBehaviour
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
         xRotation += mouseX;
-        xRotation= Mathf.Clamp(xRotation, -360f, 360f);
+        //xRotation= Mathf.Clamp(xRotation, -360f, 360f);
 
        
         yRotation += mouseY;
         yRotation = Mathf.Clamp(yRotation, -90f,90f);
 
 
-        transform.localRotation = Quaternion.Euler(-yRotation, xRotation, 0f);
-        //this.transform.Rotate(Vector3.up * mouseX);
+        // Applying both pitch and yaw rotation in one operation to the camera
+        Quaternion cameraRotation = Quaternion.Euler(-yRotation, xRotation, 0f);
+        transform.localRotation = cameraRotation;
     }
 
     private void UpdateTranslationMovement()
     {
-        float horizontalTrans = Input.GetAxis("Horizontal"),verticalTrans=Input.GetAxis("Vertical");
+        float horizontalMovement = Input.GetAxis("Horizontal") * movementSpeed * Time.deltaTime;
+        float verticalMovement = Input.GetAxis("Vertical") * movementSpeed * Time.deltaTime;
 
-        transform.Translate(horizontalTrans*movementSpeed, 0, verticalTrans*movementSpeed);
+        // Moving the camera based on the current rotation
+        Vector3 movement = transform.right * horizontalMovement + transform.forward * verticalMovement;
+        rb.velocity = movement;
+        transform.Translate(rb.velocity, Space.World);
     }
 }

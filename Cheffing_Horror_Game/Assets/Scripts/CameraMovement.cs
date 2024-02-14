@@ -13,18 +13,23 @@ public class CameraMovement : MonoBehaviour
 
     private Rigidbody rb;
 
+    [SerializeField] Light flashLight;
+
+    private bool flashlightOn = false;
    
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         rb= GetComponent<Rigidbody>();  
+        flashLight.enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         UpdateMoseRotationMovement(); UpdateTranslationMovement();
+        ToggleFlashlight();
     }
 
     private void UpdateMoseRotationMovement()
@@ -55,5 +60,21 @@ public class CameraMovement : MonoBehaviour
         Vector3 movement = transform.right * horizontalMovement + transform.forward * verticalMovement;
         rb.velocity = movement;
         transform.Translate(rb.velocity, Space.World);
+    }
+
+    private void ToggleFlashlight()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (!flashlightOn)
+            {
+                flashLight.enabled = true; flashlightOn = true;
+            }
+            else
+            {
+                flashLight.enabled = false; flashlightOn = false;
+            }
+        }
+       
     }
 }

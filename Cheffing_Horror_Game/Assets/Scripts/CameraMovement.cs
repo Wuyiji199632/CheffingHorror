@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    public float mouseSensitivity = 120f;
+    public float mouseSensitivity = 220f;
 
     public float movementSpeed = 10f;
     //public Transform playerBody;
@@ -16,23 +16,29 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] Light flashLight;
 
     private bool flashlightOn = false;
-   
+
+    [SerializeField] private float interactionDistance = 10.0f;
+    [SerializeField] private LayerMask pickupLayer;
+    [SerializeField] private GameObject guidanceText;
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         rb= GetComponent<Rigidbody>();  
         flashLight.enabled = false;
+        guidanceText = GameObject.Find("GuidanceText");
+        guidanceText.SetActive(false);
+        InvokeRepeating("DetectObjectPickUps", 0.1f, 0.1f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateMoseRotationMovement(); UpdateTranslationMovement();
+        UpdateMouseRotationMovement(); UpdateTranslationMovement();
         ToggleFlashlight();
     }
 
-    private void UpdateMoseRotationMovement()
+    private void UpdateMouseRotationMovement()
     {
         float mouseX=Input.GetAxis("Mouse X")*mouseSensitivity*Time.deltaTime;
 
@@ -76,5 +82,24 @@ public class CameraMovement : MonoBehaviour
             }
         }
        
+    }
+
+    private void DetectObjectPickUps()
+    {
+        RaycastHit hit;
+
+        if(Physics.Raycast(transform.position, transform.forward, out hit, interactionDistance,pickupLayer))
+        {
+            guidanceText.SetActive(true);
+
+            Debug.Log("Picked up " + hit.collider.name);
+
+        }
+        else
+        {
+            guidanceText.SetActive(false);
+        }
+
+
     }
 }

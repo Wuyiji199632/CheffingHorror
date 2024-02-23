@@ -137,6 +137,11 @@ MonoBehaviour:
   mouseSensitivity: 100
   movementSpeed: 10
   flashLight: {fileID: 8506510134900271170}
+  interactionDistance: 8
+  pickupLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  guidanceText: {fileID: 0}
 --- !u!136 &8506510134055348750
 CapsuleCollider:
   m_ObjectHideFlags: 0

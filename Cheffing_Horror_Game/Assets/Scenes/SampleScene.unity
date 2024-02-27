@@ -13318,6 +13318,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8506510134055348746, guid: 571554bb34819a94d90ed3149a0ed270,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8506510134055348746, guid: 571554bb34819a94d90ed3149a0ed270,
+        type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0.2264151
+      objectReference: {fileID: 0}
+    - target: {fileID: 8506510134055348746, guid: 571554bb34819a94d90ed3149a0ed270,
+        type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0.2264151
+      objectReference: {fileID: 0}
+    - target: {fileID: 8506510134055348746, guid: 571554bb34819a94d90ed3149a0ed270,
+        type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0.2264151
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 571554bb34819a94d90ed3149a0ed270, type: 3}
 --- !u!1 &8513859188573140608

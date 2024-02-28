@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 
 public class CameraMovement : MonoBehaviour
@@ -20,6 +21,11 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float interactionDistance = 10.0f;
     [SerializeField] private LayerMask pickupLayer;
     [SerializeField] private GameObject guidanceText;
+    [SerializeField] private bool itemPickedUp=false;
+    [SerializeField] private Transform pickUpAttachPoint;
+    [SerializeField] private GameObject currentItem;
+    [Header("Items to pick up")]
+    [SerializeField] private GameObject torch;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,14 +34,14 @@ public class CameraMovement : MonoBehaviour
         flashLight.enabled = false;
         guidanceText = GameObject.Find("GuidanceText");
         guidanceText.SetActive(false);
-        InvokeRepeating("DetectObjectPickUps", 0.1f, 0.1f);
+        InvokeRepeating("DetectObjectPickUps", 0.01f, 0.01f);
     }
 
     // Update is called once per frame
     void Update()
     {
         UpdateMouseRotationMovement(); UpdateTranslationMovement();
-        ToggleFlashlight();
+        ToggleFlashlight();DetachObjectToArm();
     }
 
     private void UpdateMouseRotationMovement()
@@ -70,6 +76,7 @@ public class CameraMovement : MonoBehaviour
 
     private void ToggleFlashlight()
     {
+        if(!itemPickedUp) { return; }
         if (Input.GetKeyDown(KeyCode.F))
         {
             if (!flashlightOn)
@@ -92,14 +99,65 @@ public class CameraMovement : MonoBehaviour
         {
             guidanceText.SetActive(true);
 
-            Debug.Log("Picked up " + hit.collider.name);
+            Debug.Log("Found a " + hit.collider.name);
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                itemPickedUp = !itemPickedUp;
+
+                TogglePickingUpItems(hit,itemPickedUp);
+            }
 
         }
         else
         {
             guidanceText.SetActive(false);
+           
         }
 
 
+    }
+
+    private void TogglePickingUpItems(RaycastHit hit,bool isPickedUp)
+    {
+        if(isPickedUp)
+        {
+            
+            if(hit.collider.gameObject.GetComponent<PickUpItem>()!=null)
+            {
+                Debug.Log($"Picked up {hit.collider.gameObject.name}");
+
+                AttachObjectToArm(hit.collider.gameObject);
+            }
+        }
+      
+    }
+
+    private void AttachObjectToArm(GameObject itemPicked)
+    {
+        itemPicked.transform.parent = pickUpAttachPoint;
+        itemPicked.transform.position = pickUpAttachPoint.position+new Vector3(0,3,0);
+        currentItem= itemPicked;
+    }
+
+    private void DetachObjectToArm()
+    {
+        
+        if(currentItem!=null)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (currentItem = GameObject.Find("Torch"))
+                {
+                    flashLight.enabled = false; flashlightOn = false;
+                }
+                itemPickedUp = !itemPickedUp;
+                currentItem.transform.parent = null;
+                currentItem = null;
+
+                
+               
+            }
+        }
     }
 }

@@ -107,14 +107,7 @@ public class CameraMovement : MonoBehaviour
                 TogglePickingUpItems(hit, itemPickedUp);
             }         
         }
-        /* else
-        {
-            guidanceText.SetActive(false);
-           
-        }*/
-
-
-
+       
     }
 
 

@@ -104,9 +104,11 @@ public class CameraMovement : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 itemPickedUp = !itemPickedUp;
+                TogglePickingUpItems(hit, itemPickedUp);
 
-                TogglePickingUpItems(hit,itemPickedUp);
             }
+
+           
 
         }
         else
@@ -115,6 +117,7 @@ public class CameraMovement : MonoBehaviour
            
         }
 
+      
 
     }
 
@@ -122,13 +125,10 @@ public class CameraMovement : MonoBehaviour
     {
         if(isPickedUp)
         {
-            
-            if(hit.collider.gameObject.GetComponent<PickUpItem>()!=null)
-            {
-                Debug.Log($"Picked up {hit.collider.gameObject.name}");
 
-                AttachObjectToArm(hit.collider.gameObject);
-            }
+            Debug.Log($"Picked up {hit.collider.gameObject.name}");
+
+            AttachObjectToArm(hit.collider.gameObject);
         }
       
     }
@@ -136,7 +136,7 @@ public class CameraMovement : MonoBehaviour
     private void AttachObjectToArm(GameObject itemPicked)
     {
         itemPicked.transform.parent = pickUpAttachPoint;
-        itemPicked.transform.position = pickUpAttachPoint.position+new Vector3(0,3,0);
+        itemPicked.transform.position = pickUpAttachPoint.position;
         currentItem= itemPicked;
     }
 
@@ -145,6 +145,7 @@ public class CameraMovement : MonoBehaviour
         
         if(currentItem!=null)
         {
+            if (!itemPickedUp) return;
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (currentItem = GameObject.Find("Torch"))

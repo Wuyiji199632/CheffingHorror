@@ -97,7 +97,7 @@ public class CameraMovement : MonoBehaviour
 
         if(Physics.Raycast(transform.position, transform.forward, out hit, interactionDistance,pickupLayer))
         {
-            guidanceText.SetActive(true);
+            guidanceText.SetActive(!itemPickedUp);
 
             Debug.Log("Found a " + hit.collider.name);
 
@@ -105,21 +105,19 @@ public class CameraMovement : MonoBehaviour
             {
                 itemPickedUp = !itemPickedUp;
                 TogglePickingUpItems(hit, itemPickedUp);
-
-            }
-
-           
-
+            }         
         }
-        else
+        /* else
         {
             guidanceText.SetActive(false);
            
-        }
+        }*/
 
-      
+
 
     }
+
+
 
     private void TogglePickingUpItems(RaycastHit hit,bool isPickedUp)
     {

@@ -22,6 +22,7 @@ public class ButtonManager : MonoBehaviour
         settingsPage.SetActive(false);
         CreditsPage.SetActive(false);
         ControlPage.SetActive(false);
+        SoundManager.Instance.Play("BGM");
     }
 
 

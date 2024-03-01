@@ -105,7 +105,11 @@ public class CameraMovement : MonoBehaviour
             {
                 itemPickedUp = !itemPickedUp;
                 TogglePickingUpItems(hit, itemPickedUp);
-            }         
+            }
+        }
+        else
+        {
+            guidanceText.SetActive(false);
         }
        
     }
@@ -128,6 +132,7 @@ public class CameraMovement : MonoBehaviour
     {
         itemPicked.transform.parent = pickUpAttachPoint;
         itemPicked.transform.position = pickUpAttachPoint.position;
+        itemPicked.transform.localRotation= Quaternion.Euler(0,90,0); //Adjust as needed
         currentItem= itemPicked;
     }
 

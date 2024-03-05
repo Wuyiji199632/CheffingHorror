@@ -78,6 +78,7 @@ public class CameraMovement : MonoBehaviour
         if(!itemPickedUp) { return; }
         if (Input.GetKeyDown(KeyCode.F))
         {
+            //Differentiate the functionalities in terms of item names
             if (currentItem.name == "Torch")
             {
                 if (!flashlightOn)
@@ -89,7 +90,7 @@ public class CameraMovement : MonoBehaviour
                     flashLight.enabled = false; flashlightOn = false;
                 }
             }
-            //Differentiate the functionalities in terms of item names
+           
          
         }
        

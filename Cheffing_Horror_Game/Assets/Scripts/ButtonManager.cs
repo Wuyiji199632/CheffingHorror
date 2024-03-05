@@ -12,16 +12,16 @@ public class ButtonManager : MonoBehaviour
 
     public GameObject CreditsPage;
 
-    public GameObject ControlPage;
+    public GameObject controlPage,audioControlPage,graphicsControlPage;
 
-    bool controlPageOpened=false;
+    bool controlPageOpened=false,audioControlPageOpened=false,graphicsControlPageOpened=false;
 
     private void Start()
     {
         firstSelectionPage.SetActive(true);
         settingsPage.SetActive(false);
         CreditsPage.SetActive(false);
-        ControlPage.SetActive(false);
+        controlPage.SetActive(false);audioControlPage.SetActive(false); graphicsControlPage.SetActive(false);
         SoundManager.Instance.Play("BGM");
     }
 
@@ -57,7 +57,18 @@ public class ButtonManager : MonoBehaviour
     public void EnableControlPage()
     {
         controlPageOpened=!controlPageOpened;
-        ControlPage.SetActive(controlPageOpened);
+        controlPage.SetActive(controlPageOpened);
+    }
+    public void EnableAudioPage()
+    {
+        audioControlPageOpened=!audioControlPageOpened;
+        audioControlPage.SetActive(audioControlPageOpened);
+    }
+    public void EnableGraphicsPage()
+    {
+        graphicsControlPageOpened=!graphicsControlPageOpened;
+        graphicsControlPage.SetActive(graphicsControlPageOpened);
+
     }
     public void QuitGame()
     {

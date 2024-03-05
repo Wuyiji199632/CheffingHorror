@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class SoundManager : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance { get; private set; }
 
     public AudioMixer audioMixer;
+
+    public Slider soundVolumeSlider;
     private void Awake()
     {
         if (Instance == null)
@@ -56,4 +59,11 @@ public class SoundManager : MonoBehaviour
             _source.Play();
         }
     }
+
+    public void SetVolume(float sliderValue)
+    {
+        // Assuming sliderValue is between 0 and 1
+        audioMixer.SetFloat("MasterVolume", Mathf.Log10(sliderValue) * 20);
+    }
+
 }

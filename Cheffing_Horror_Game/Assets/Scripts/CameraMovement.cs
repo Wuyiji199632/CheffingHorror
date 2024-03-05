@@ -24,8 +24,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private bool itemPickedUp=false;
     [SerializeField] private Transform pickUpAttachPoint;
     [SerializeField] private GameObject currentItem;
-    [Header("Items to pick up")]
-    [SerializeField] private GameObject torch;
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -115,7 +114,6 @@ public class CameraMovement : MonoBehaviour
     }
 
 
-
     private void TogglePickingUpItems(RaycastHit hit,bool isPickedUp)
     {
         if(isPickedUp)
@@ -130,6 +128,9 @@ public class CameraMovement : MonoBehaviour
 
     private void AttachObjectToArm(GameObject itemPicked)
     {
+        if (itemPicked == null) return;
+
+        
         itemPicked.transform.parent = pickUpAttachPoint;
         itemPicked.transform.position = pickUpAttachPoint.position;
         itemPicked.transform.localRotation= Quaternion.Euler(0,90,0); //Adjust as needed
@@ -139,21 +140,22 @@ public class CameraMovement : MonoBehaviour
     private void DetachObjectToArm()
     {
         
-        if(currentItem!=null)
+        if(currentItem != null && itemPickedUp && Input.GetKeyDown(KeyCode.E))
         {
+           
             if (!itemPickedUp) return;
+           
             if (Input.GetKeyDown(KeyCode.E))
             {
-                if (currentItem = GameObject.Find("Torch"))
+                if (currentItem.name=="Torch")
                 {
                     flashLight.enabled = false; flashlightOn = false;
                 }
+
                 itemPickedUp = !itemPickedUp;
                 currentItem.transform.parent = null;
                 currentItem = null;
-
-                
-               
+                              
             }
         }
     }

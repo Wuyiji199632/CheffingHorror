@@ -7,6 +7,8 @@ public class WorldManager : MonoBehaviour
     [SerializeField] private GameObject pauseMenu;
 
     [SerializeField] private bool paused = false;
+
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +31,7 @@ public class WorldManager : MonoBehaviour
         await Task.Run(() =>
         {
             // Your background task here
+           
         });
 
 
@@ -37,6 +40,7 @@ public class WorldManager : MonoBehaviour
         {
             paused = !paused;
             pauseMenu.SetActive(paused);
+            Time.timeScale = paused ? 0 : 1;
         });
 
     }

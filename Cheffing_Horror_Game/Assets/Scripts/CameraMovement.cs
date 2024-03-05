@@ -40,7 +40,7 @@ public class CameraMovement : MonoBehaviour
     void Update()
     {
         UpdateMouseRotationMovement(); UpdateTranslationMovement();
-        ToggleFlashlight();DetachObjectToArm();
+        ToggleObjectFunctionalities();DetachObjectToArm();
     }
 
     private void UpdateMouseRotationMovement()
@@ -73,19 +73,24 @@ public class CameraMovement : MonoBehaviour
         transform.Translate(rb.velocity, Space.World);
     }
 
-    private void ToggleFlashlight()
+    private void ToggleObjectFunctionalities()
     {
         if(!itemPickedUp) { return; }
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (!flashlightOn)
+            if (currentItem.name == "Torch")
             {
-                flashLight.enabled = true; flashlightOn = true;
+                if (!flashlightOn)
+                {
+                    flashLight.enabled = true; flashlightOn = true;
+                }
+                else
+                {
+                    flashLight.enabled = false; flashlightOn = false;
+                }
             }
-            else
-            {
-                flashLight.enabled = false; flashlightOn = false;
-            }
+            //Differentiate the functionalities in terms of item names
+         
         }
        
     }
@@ -133,8 +138,10 @@ public class CameraMovement : MonoBehaviour
         
         itemPicked.transform.parent = pickUpAttachPoint;
         itemPicked.transform.position = pickUpAttachPoint.position;
+        AdjustTransformsBasedOnItemName(itemPicked);
         itemPicked.transform.localRotation= Quaternion.Euler(0,90,0); //Adjust as needed
-        currentItem= itemPicked;
+       
+        currentItem = itemPicked;
     }
 
     private void DetachObjectToArm()
@@ -157,6 +164,25 @@ public class CameraMovement : MonoBehaviour
                 currentItem = null;
                               
             }
+        }
+    }
+
+    private void AdjustTransformsBasedOnItemName(GameObject currentItem)
+    {
+        if (currentItem == null) return;
+
+        switch(currentItem.name)
+        {
+            case "Torch":
+
+                break;
+            case "Taser":
+                currentItem.transform.localPosition = new Vector3(0, -0.7f, 0);
+                             
+                break;
+
+                default:              
+                break;
         }
     }
 }

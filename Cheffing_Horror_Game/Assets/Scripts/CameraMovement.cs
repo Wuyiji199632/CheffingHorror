@@ -128,11 +128,12 @@ public class CameraMovement : MonoBehaviour
 
        
     }
-
+    
 
     private void TogglePickingUpItems(RaycastHit hit,bool isPickedUp)
     {
-        if(isPickedUp)
+       
+        if (isPickedUp)
         {
 
             Debug.Log($"Picked up {hit.collider.gameObject.name}");
@@ -140,8 +141,21 @@ public class CameraMovement : MonoBehaviour
             AttachObjectToArm(hit.collider.gameObject);
         }
       
+      
     }
+    private void ReleaseItem()
+    {
+        currentItem.GetComponent<Rigidbody>().isKinematic = false;
+       
+        if (currentItem.name == "Torch")
+        {
+            flashLight.enabled = false; flashlightOn = false;
+        }
 
+        itemPickedUp = !itemPickedUp;
+        currentItem.transform.parent = null;
+        currentItem = null;
+    }
     private void AttachObjectToArm(GameObject itemPicked)
     {
         if (itemPicked == null) return;
@@ -152,29 +166,32 @@ public class CameraMovement : MonoBehaviour
         AdjustTransformsBasedOnItemName(itemPicked);
         itemPicked.transform.localRotation= Quaternion.Euler(0,90,0); //Adjust as needed
        
+        if(itemPicked.name=="Taser")
+            itemPicked.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+
         currentItem = itemPicked;
     }
 
     private void DetachObjectToArm()
     {
-        
-        if(currentItem != null && itemPickedUp && Input.GetKeyDown(KeyCode.E))
-        {
-           
-            if (!itemPickedUp) return;
-           
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                if (currentItem.name=="Torch")
-                {
-                    flashLight.enabled = false; flashlightOn = false;
-                }
 
-                itemPickedUp = !itemPickedUp;
-                currentItem.transform.parent = null;
-                currentItem = null;
-                              
+        if (currentItem != null && itemPickedUp && Input.GetKeyDown(KeyCode.E))
+        {
+            // No need to check if itemPickedUp is false here, as it's already confirmed to be true
+            currentItem.GetComponent<Rigidbody>().isKinematic = false;
+
+            if (currentItem.name == "Torch")
+            {
+                flashLight.enabled = false;
+                flashlightOn = false;
             }
+
+            // Detach the item from the player
+            currentItem.transform.parent = null;
+            currentItem = null;
+
+            // Set itemPickedUp to false since the item is now detached
+            itemPickedUp = false;
         }
     }
 

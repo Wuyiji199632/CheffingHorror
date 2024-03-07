@@ -16,7 +16,7 @@ public class CameraMovement : MonoBehaviour
 
     [SerializeField] Light flashLight;
 
-    private bool flashlightOn = false;
+    private bool itemFunctionOn = false;
 
     [SerializeField] private float interactionDistance = 10.0f;
     [SerializeField] private LayerMask pickupLayer;
@@ -77,18 +77,29 @@ public class CameraMovement : MonoBehaviour
     private void ToggleObjectFunctionalities()
     {
         if(!itemPickedUp) { return; }
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetMouseButtonDown(0))
         {
             //Differentiate the functionalities in terms of item names
             if (currentItem.name == "Torch")
             {
-                if (!flashlightOn)
+                if (!itemFunctionOn)
                 {
-                    flashLight.enabled = true; flashlightOn = true;
+                    flashLight.enabled = true; itemFunctionOn = true;
                 }
                 else
                 {
-                    flashLight.enabled = false; flashlightOn = false;
+                    flashLight.enabled = false; itemFunctionOn = false;
+                }
+            }
+            else if (currentItem.name == "Taser")
+            {
+                if (!itemFunctionOn)
+                {
+                    Debug.Log($"Taser turned on!"); itemFunctionOn = true;
+                }
+                else
+                {
+                    Debug.Log($"Taser turned off!"); itemFunctionOn = false;
                 }
             }
            
@@ -149,7 +160,7 @@ public class CameraMovement : MonoBehaviour
        
         if (currentItem.name == "Torch")
         {
-            flashLight.enabled = false; flashlightOn = false;
+            flashLight.enabled = false; itemFunctionOn = false;
         }
 
         itemPickedUp = !itemPickedUp;
@@ -183,7 +194,7 @@ public class CameraMovement : MonoBehaviour
             if (currentItem.name == "Torch")
             {
                 flashLight.enabled = false;
-                flashlightOn = false;
+                itemFunctionOn = false;
             }
 
             // Detach the item from the player

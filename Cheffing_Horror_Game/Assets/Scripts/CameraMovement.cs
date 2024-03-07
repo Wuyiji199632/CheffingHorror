@@ -122,6 +122,7 @@ public class CameraMovement : MonoBehaviour
             if (WorldManager.Instance.currentItemInfo != null) // Ensure currentItemInfo has been assigned
             {
                 WorldManager.Instance.ShowItemInstruction(WorldManager.Instance.currentItemInfo.name, false);
+                WorldManager.Instance.currentItemInfo = null;
             }
         }
 

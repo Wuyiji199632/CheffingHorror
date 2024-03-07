@@ -1005,7 +1005,7 @@ GameObject:
   - component: {fileID: 1242809594}
   - component: {fileID: 1242809593}
   m_Layer: 5
-  m_Name: ItemInfoBoard
+  m_Name: Torch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1462,6 +1462,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 837972931}
   paused: 0
+  currentItemInfo: {fileID: 0}
+  cursorPointingToItem: 0
+  itemInfos:
+  - {fileID: 1242809591}
 --- !u!4 &13684646348729542
 Transform:
   m_ObjectHideFlags: 0

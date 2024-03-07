@@ -41,6 +41,7 @@ public class CameraMovement : MonoBehaviour
     {
         UpdateMouseRotationMovement(); UpdateTranslationMovement();
         ToggleObjectFunctionalities();DetachObjectToArm();
+       
     }
 
     private void UpdateMouseRotationMovement()
@@ -99,8 +100,8 @@ public class CameraMovement : MonoBehaviour
     private void DetectObjectPickUps()
     {
         RaycastHit hit;
-
-        if(Physics.Raycast(transform.position, transform.forward, out hit, interactionDistance,pickupLayer))
+        bool rayHit = Physics.Raycast(transform.position, transform.forward, out hit, interactionDistance, pickupLayer);
+        if (rayHit && WorldManager.Instance.displayedItemInfos.ContainsKey(hit.collider.gameObject.name))
         {
             guidanceText.SetActive(!itemPickedUp);
 
@@ -111,11 +112,19 @@ public class CameraMovement : MonoBehaviour
                 itemPickedUp = !itemPickedUp;
                 TogglePickingUpItems(hit, itemPickedUp);
             }
+
+            WorldManager.Instance.ShowItemInstruction(hit.collider.gameObject.name, true);
         }
         else
         {
             guidanceText.SetActive(false);
+
+            if (WorldManager.Instance.currentItemInfo != null) // Ensure currentItemInfo has been assigned
+            {
+                WorldManager.Instance.ShowItemInstruction(WorldManager.Instance.currentItemInfo.name, false);
+            }
         }
+
        
     }
 

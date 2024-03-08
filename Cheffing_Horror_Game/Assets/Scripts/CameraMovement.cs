@@ -24,7 +24,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private bool itemPickedUp=false;
     [SerializeField] private Transform pickUpAttachPoint;
     [SerializeField] private GameObject currentItem;
-    [SerializeField] private GameObject parentContainer;
+ 
     // Start is called before the first frame update
     void Start()
     {
@@ -52,7 +52,7 @@ public class CameraMovement : MonoBehaviour
 
         xRotation += mouseX;
         //xRotation= Mathf.Clamp(xRotation, -360f, 360f);
-
+      
        
         yRotation += mouseY;
         yRotation = Mathf.Clamp(yRotation, -90f,90f);
@@ -61,6 +61,7 @@ public class CameraMovement : MonoBehaviour
         // Applying both pitch and yaw rotation in one operation to the camera
         Quaternion cameraRotation = Quaternion.Euler(-yRotation, xRotation, 0f);
         Camera.main.transform.localRotation = cameraRotation;
+        transform.localRotation=Quaternion.Euler(0, xRotation, 0);
     }
 
     private void UpdateTranslationMovement()
@@ -69,7 +70,7 @@ public class CameraMovement : MonoBehaviour
         float verticalMovement = Input.GetAxis("Vertical") * movementSpeed * Time.deltaTime;
 
         // Moving the camera based on the current rotation
-        Vector3 movement = transform.right * horizontalMovement + transform.forward * verticalMovement;
+        Vector3 movement =Camera.main.transform.right * horizontalMovement +Camera.main.transform.forward * verticalMovement;
         rb.velocity = movement;
         transform.Translate(rb.velocity, Space.World);
     }
@@ -111,7 +112,7 @@ public class CameraMovement : MonoBehaviour
     private void DetectObjectPickUps()
     {
         RaycastHit hit;
-        bool rayHit = Physics.Raycast(transform.position, transform.forward, out hit, interactionDistance, pickupLayer);
+        bool rayHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactionDistance, pickupLayer);
         if (rayHit && WorldManager.Instance.displayedItemInfos.ContainsKey(hit.collider.gameObject.name))
         {
             guidanceText.SetActive(!itemPickedUp);

@@ -24,7 +24,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private bool itemPickedUp=false;
     [SerializeField] private Transform pickUpAttachPoint;
     [SerializeField] private GameObject currentItem;
-   
+    [SerializeField] private GameObject parentContainer;
     // Start is called before the first frame update
     void Start()
     {
@@ -60,7 +60,7 @@ public class CameraMovement : MonoBehaviour
 
         // Applying both pitch and yaw rotation in one operation to the camera
         Quaternion cameraRotation = Quaternion.Euler(-yRotation, xRotation, 0f);
-        transform.localRotation = cameraRotation;
+        Camera.main.transform.localRotation = cameraRotation;
     }
 
     private void UpdateTranslationMovement()
@@ -176,9 +176,8 @@ public class CameraMovement : MonoBehaviour
         itemPicked.transform.position = pickUpAttachPoint.position;
         AdjustTransformsBasedOnItemName(itemPicked);
         itemPicked.transform.localRotation= Quaternion.Euler(0,90,0); //Adjust as needed
-       
-        if(itemPicked.name=="Taser")
-            itemPicked.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+
+        itemPicked.gameObject.GetComponent<Rigidbody>().isKinematic = true;
 
         currentItem = itemPicked;
     }

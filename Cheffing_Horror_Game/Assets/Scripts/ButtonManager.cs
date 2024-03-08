@@ -56,17 +56,20 @@ public class ButtonManager : MonoBehaviour
 
     public void EnableControlPage()
     {
-        controlPageOpened=!controlPageOpened;
+        audioControlPage.SetActive(false); graphicsControlPage.SetActive(false);
+        controlPageOpened =!controlPageOpened;
         controlPage.SetActive(controlPageOpened);
     }
     public void EnableAudioPage()
     {
-        audioControlPageOpened=!audioControlPageOpened;
+        controlPage.SetActive(false); graphicsControlPage.SetActive(false);
+        audioControlPageOpened =!audioControlPageOpened;
         audioControlPage.SetActive(audioControlPageOpened);
     }
     public void EnableGraphicsPage()
     {
-        graphicsControlPageOpened=!graphicsControlPageOpened;
+        controlPage.SetActive(false); audioControlPage.SetActive(false);
+        graphicsControlPageOpened =!graphicsControlPageOpened;
         graphicsControlPage.SetActive(graphicsControlPageOpened);
 
     }

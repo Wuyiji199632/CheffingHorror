@@ -213,7 +213,7 @@ public class CameraMovement : MonoBehaviour
         switch(currentItem.name)
         {
             case "Torch":
-
+                currentItem.transform.localPosition = new Vector3(0, -0.4f, 0);
                 break;
             case "Taser":
                 currentItem.transform.localPosition = new Vector3(0, -0.7f, 0);

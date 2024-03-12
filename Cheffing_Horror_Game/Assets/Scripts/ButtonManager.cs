@@ -8,7 +8,7 @@ public class ButtonManager : MonoBehaviour
     [Header("Main Menu Pages")]
     public GameObject settingsPage;
 
-    public GameObject firstSelectionPage;
+    public GameObject startPage,firstSelectionPage;
 
     public GameObject CreditsPage;
 
@@ -16,9 +16,15 @@ public class ButtonManager : MonoBehaviour
 
     bool controlPageOpened=false,audioControlPageOpened=false,graphicsControlPageOpened=false;
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(this);
+    }
+
     private void Start()
     {
-        firstSelectionPage.SetActive(true);
+        startPage.SetActive(true);
+        firstSelectionPage.SetActive(false);
         settingsPage.SetActive(false);
         CreditsPage.SetActive(false);
         controlPage.SetActive(false);audioControlPage.SetActive(false); graphicsControlPage.SetActive(false);
@@ -35,7 +41,13 @@ public class ButtonManager : MonoBehaviour
     {
         Debug.Log("Loading saved data...will implement later on!");
     }
-
+    public void LoadFirstSelectionPage()
+    {
+        startPage.SetActive(false);
+        settingsPage.SetActive(false);
+        firstSelectionPage.SetActive(true);
+        CreditsPage.SetActive(false);
+    }
     public void LoadSettingsMenu()
     {
         settingsPage.SetActive(true);

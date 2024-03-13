@@ -226,6 +226,7 @@ MonoBehaviour:
   itemPickedUp: 0
   pickUpAttachPoint: {fileID: 8228745708615759242}
   currentItem: {fileID: 0}
+  testText: {fileID: 0}
 --- !u!136 &138658924
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -550,6 +551,7 @@ MonoBehaviour:
   itemPickedUp: 0
   pickUpAttachPoint: {fileID: 8228745708615759242}
   currentItem: {fileID: 0}
+  testText: {fileID: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0

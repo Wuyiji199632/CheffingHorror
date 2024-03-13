@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-
 public class CameraMovement : MonoBehaviour
 {
     public float mouseSensitivity = 220f;
@@ -24,7 +23,8 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private bool itemPickedUp=false;
     [SerializeField] private Transform pickUpAttachPoint;
     [SerializeField] private GameObject currentItem;
- 
+
+   
     // Start is called before the first frame update
     void Start()
     {

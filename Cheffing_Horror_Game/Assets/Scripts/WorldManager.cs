@@ -62,6 +62,7 @@ public class WorldManager : MonoBehaviour
         await Task.Run(() =>
         {
             // Your background task here
+            
            
         });
 
@@ -72,6 +73,7 @@ public class WorldManager : MonoBehaviour
             paused = !paused;
             pauseMenu.SetActive(paused);
             Time.timeScale = paused ? 0 : 1;
+            Cursor.lockState =!paused?CursorLockMode.Locked: CursorLockMode.None;
         });
 
     }

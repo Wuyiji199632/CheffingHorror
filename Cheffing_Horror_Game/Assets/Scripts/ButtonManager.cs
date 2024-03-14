@@ -63,7 +63,11 @@ public class ButtonManager : MonoBehaviour
     }
     public void GoBackToMainMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        startPage.SetActive(false);
+        firstSelectionPage.SetActive(true);
+        settingsPage.SetActive(false);
+        CreditsPage.SetActive(false);
+        controlPage.SetActive(false); audioControlPage.SetActive(false); graphicsControlPage.SetActive(false);
     }
 
     public void EnableControlPage()

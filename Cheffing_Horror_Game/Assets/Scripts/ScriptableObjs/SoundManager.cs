@@ -21,7 +21,7 @@ public class SoundManager : MonoBehaviour
             // If no instance exists, this becomes the singleton instance
             Instance = this;
             // Ensure this object persists across scene loads
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
 
             InitializeSounds();
         }

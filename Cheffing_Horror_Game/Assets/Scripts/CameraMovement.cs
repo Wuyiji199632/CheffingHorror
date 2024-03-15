@@ -18,12 +18,12 @@ public class CameraMovement : MonoBehaviour
     private bool itemFunctionOn = false;
 
     [SerializeField] private float interactionDistance = 10.0f;
-    [SerializeField] private LayerMask pickupLayer;
+    [SerializeField] private LayerMask pickupLayer,wallLayer;
     [SerializeField] private GameObject guidanceText;
     [SerializeField] private bool itemPickedUp=false;
     [SerializeField] private Transform pickUpAttachPoint;
     [SerializeField] private GameObject currentItem;
-
+    private const float backwardSpeed = 10.0f;
    
     // Start is called before the first frame update
     void Start()
@@ -33,15 +33,25 @@ public class CameraMovement : MonoBehaviour
         flashLight.enabled = false;
         guidanceText = GameObject.Find("GuidanceText");
         guidanceText.SetActive(false);
-        InvokeRepeating("DetectObjectPickUps", 0.01f, 0.01f);
+        //InvokeRepeating("DetectObjectPickUps", 0.001f, 0.001f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateMouseRotationMovement(); UpdateTranslationMovement();
-        ToggleObjectFunctionalities();DetachObjectToArm();
+        StartCoroutine(DetectObjectPickUps());
+        DetachObjectToArm();
        
+    }
+
+    private void FixedUpdate()
+    {
+        
+        UpdateMouseRotationMovement(); UpdateTranslationMovement();
+    }
+    private void LateUpdate()
+    {
+        ToggleObjectFunctionalities();
     }
 
     private void UpdateMouseRotationMovement()
@@ -109,7 +119,7 @@ public class CameraMovement : MonoBehaviour
        
     }
 
-    private void DetectObjectPickUps()
+    private IEnumerator DetectObjectPickUps()
     {
         RaycastHit hit;
         bool rayHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactionDistance, pickupLayer);
@@ -122,6 +132,7 @@ public class CameraMovement : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 itemPickedUp = !itemPickedUp;
+                yield return new WaitForSeconds(0.1f);
                 TogglePickingUpItems(hit, itemPickedUp);
             }
 
@@ -178,7 +189,7 @@ public class CameraMovement : MonoBehaviour
         AdjustTransformsBasedOnItemName(itemPicked);
         itemPicked.transform.localRotation= Quaternion.Euler(0,90,0); //Adjust as needed
 
-        itemPicked.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+       
 
         currentItem = itemPicked;
     }
@@ -189,6 +200,7 @@ public class CameraMovement : MonoBehaviour
         if (currentItem != null && itemPickedUp && Input.GetKeyDown(KeyCode.E))
         {
             // No need to check if itemPickedUp is false here, as it's already confirmed to be true
+            currentItem.GetComponent<Collider>().isTrigger = false;
             currentItem.GetComponent<Rigidbody>().isKinematic = false;
 
             if (currentItem.name == "Torch")
@@ -210,18 +222,24 @@ public class CameraMovement : MonoBehaviour
     {
         if (currentItem == null) return;
 
-        switch(currentItem.name)
+        currentItem.GetComponent<Rigidbody>().isKinematic = true;
+        switch (currentItem.name)
         {
             case "Torch":
-                currentItem.transform.localPosition = new Vector3(0, -0.4f, 0);
+               
+                currentItem.transform.localPosition = new Vector3(0.146f, -0.688f, -0.115f);
+                currentItem.transform.localRotation = Quaternion.Euler(0, 90, 0);
+               
                 break;
-            case "Taser":
-                currentItem.transform.localPosition = new Vector3(0, -0.7f, 0);
-                             
+            case "Taser":                   
+                currentItem.transform.localPosition = new Vector3(0, -0.7f, -1.7f);
+                currentItem.GetComponent<Collider>().isTrigger = true;
                 break;
 
-                default:              
+            default:              
                 break;
         }
     }
+
+   
 }

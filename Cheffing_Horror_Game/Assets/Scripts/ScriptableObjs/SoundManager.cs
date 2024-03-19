@@ -72,6 +72,10 @@ public class SoundManager : MonoBehaviour
 
         // Setup the sliders' initial values and callbacks here
     }
+    IEnumerator CacheNewUIElements()
+    {
+        yield return new WaitUntil(() => SceneManager.GetActiveScene().name == "SampleScene");
+    }
     public void ShowAudioAdjustmentPanel(bool audioPageOpened)
     {
         audioAdjustmentPanel.SetActive(audioPageOpened);

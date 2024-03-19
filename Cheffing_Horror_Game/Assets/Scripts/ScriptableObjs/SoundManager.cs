@@ -19,6 +19,8 @@ public class SoundManager : MonoBehaviour
     public Slider masterSoundVolumeSlider,musicVolumeSlider,creatureVolumeSlider;
 
     public AudioSource BGM_AudioSource;
+
+    public List<AudioClip> clips = new List<AudioClip>(); //Clips for indication sound in the UI
     private void Awake()
     {
         if (Instance == null)
@@ -125,6 +127,31 @@ public class SoundManager : MonoBehaviour
         {
             float volumeDb = Mathf.Log10(sliderValue) * 20;
             masterAudioMixer.SetFloat("BGMVolume", volumeDb);
+        }
+    }
+
+
+    public void PlayMouseHoverSound()
+    {
+        if (clips.Count > 0)
+        {
+
+            GameObject.Find("Sound_Ambient").GetComponent<AudioSource>().clip = clips[0];
+            AudioSource AmbientSoundSource = GameObject.Find("Sound_Ambient").GetComponent<AudioSource>();
+            AmbientSoundSource.Play();
+           
+        }
+    }
+
+    public void PlaySelectionSound()
+    {
+        if (clips.Count > 0)
+        {
+
+            GameObject.Find("Sound_Ambient").GetComponent<AudioSource>().clip = clips[1];
+            AudioSource AmbientSoundSource = GameObject.Find("Sound_Ambient").GetComponent<AudioSource>();
+            AmbientSoundSource.Play();
+
         }
     }
 }

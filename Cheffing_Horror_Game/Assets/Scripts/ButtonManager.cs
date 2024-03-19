@@ -41,8 +41,10 @@ public class ButtonManager : MonoBehaviour
     {
         Debug.Log("Loading saved data...will implement later on!");
     }
+    
     public void LoadFirstSelectionPage()
     {
+        
         startPage.SetActive(false);
         settingsPage.SetActive(false);
         firstSelectionPage.SetActive(true);

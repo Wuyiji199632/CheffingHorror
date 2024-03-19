@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4bb1d8b8dd4390429e59fb891eaea68, type: 3}
   m_Name: Ambience
   m_EditorClassIdentifier: 
-  soundName: Ambient Sound
+  soundName: Ambient
   clip: {fileID: 0}
-  audioMixerGroup: {fileID: 0}
+  audioMixerGroup: {fileID: 24300002, guid: 09795c7db343a664abcf5ab63b493f92, type: 2}
   volume: 0.7
   pitch: 1
   loop: 0

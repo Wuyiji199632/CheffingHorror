@@ -9,6 +9,7 @@ TagManager:
   - MusicVolume
   - CreatureVolume
   - Door
+  - ColDisabler
   layers:
   - Default
   - TransparentFX

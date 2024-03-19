@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: BGM
   clip: {fileID: 8300000, guid: 396d65a18e098c342b14a6111cfd847a, type: 3}
-  audioMixerGroup: {fileID: 24300002, guid: 09795c7db343a664abcf5ab63b493f92, type: 2}
-  volume: 0.7
+  audioMixerGroup: {fileID: -3099742779656331926, guid: 09795c7db343a664abcf5ab63b493f92,
+    type: 2}
+  volume: 0.619
   pitch: 1
   loop: 1

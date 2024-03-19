@@ -5,15 +5,20 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SoundManager : MonoBehaviour
 {
     public Sound[] sounds;
     public static SoundManager Instance { get; private set; }
 
-    public AudioMixer audioMixer;
+    public AudioMixer masterAudioMixer;
 
-    public Slider soundVolumeSlider;
+    public GameObject audioAdjustmentPanel;
+
+    public Slider masterSoundVolumeSlider,musicVolumeSlider,creatureVolumeSlider;
+
+    public AudioSource BGM_AudioSource;
     private void Awake()
     {
         if (Instance == null)
@@ -21,7 +26,7 @@ public class SoundManager : MonoBehaviour
             // If no instance exists, this becomes the singleton instance
             Instance = this;
             // Ensure this object persists across scene loads
-            //DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
 
             InitializeSounds();
         }
@@ -31,6 +36,14 @@ public class SoundManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    private void Start()
+    {
+       
+        BGM_AudioSource=GameObject.Find("Sound_BGM").GetComponent<AudioSource>();
+
+       
+    }
+
     private void InitializeSounds()
     {
         foreach (Sound s in sounds)
@@ -45,6 +58,26 @@ public class SoundManager : MonoBehaviour
             _source.loop = s.loop;
         }
     }
+    IEnumerator InitializeUIElementsWhenReady()
+    {
+        yield return new WaitUntil(() => audioAdjustmentPanel.activeInHierarchy);
+
+        if (audioAdjustmentPanel.activeInHierarchy)
+        {
+            masterSoundVolumeSlider = GameObject.FindGameObjectWithTag("MasterVolume").GetComponent<Slider>();
+            musicVolumeSlider = GameObject.FindGameObjectWithTag("MusicVolume").GetComponent<Slider>();
+            creatureVolumeSlider = GameObject.FindGameObjectWithTag("CreatureVolume").GetComponent<Slider>();
+        }
+   
+
+        // Setup the sliders' initial values and callbacks here
+    }
+    public void ShowAudioAdjustmentPanel(bool audioPageOpened)
+    {
+        audioAdjustmentPanel.SetActive(audioPageOpened);
+        StartCoroutine(InitializeUIElementsWhenReady());
+    }
+
     public void Play(string name)
     {
         Sound s = Array.Find(sounds, sound => sound.soundName == name);
@@ -60,10 +93,34 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void SetVolume(float sliderValue)
+    public void SetMasterVolume(float sliderValue)
     {
-        // Assuming sliderValue is between 0 and 1
-        audioMixer.SetFloat("MasterVolume", Mathf.Log10(sliderValue) * 20);
+        sliderValue = masterSoundVolumeSlider.value;
+
+        if (sliderValue <= 0)
+        {
+            masterAudioMixer.SetFloat("MasterVolume", -80f); // Use a value like -80 dB for silence.
+        }
+        else
+        {
+            float volumeDb = Mathf.Log10(sliderValue) * 20;
+            masterAudioMixer.SetFloat("MasterVolume", volumeDb);
+        }
     }
 
+    public void SetMusicVolume(float sliderValue)
+    {
+
+        sliderValue = musicVolumeSlider.value;
+
+        if (sliderValue <= 0)
+        {
+            masterAudioMixer.SetFloat("BGMVolume", -80f); // Use a value like -80 dB for silence.
+        }
+        else
+        {
+            float volumeDb = Mathf.Log10(sliderValue) * 20;
+            masterAudioMixer.SetFloat("BGMVolume", volumeDb);
+        }
+    }
 }

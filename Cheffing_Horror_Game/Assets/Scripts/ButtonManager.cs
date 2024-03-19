@@ -80,7 +80,9 @@ public class ButtonManager : MonoBehaviour
     {
         controlPage.SetActive(false); graphicsControlPage.SetActive(false);
         audioControlPageOpened =!audioControlPageOpened;
-        audioControlPage.SetActive(audioControlPageOpened);
+        //audioControlPage.SetActive(audioControlPageOpened);
+
+        SoundManager.Instance.ShowAudioAdjustmentPanel(audioControlPage);
     }
     public void EnableGraphicsPage()
     {

@@ -8,6 +8,7 @@ TagManager:
   - MasterVolume
   - MusicVolume
   - CreatureVolume
+  - Door
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - UI
   - Player
   - Wall
-  - 
+  - Door
   - 
   - 
   - 

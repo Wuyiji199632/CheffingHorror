@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using TMPro;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -18,13 +19,13 @@ public class CameraMovement : MonoBehaviour
     private bool itemFunctionOn = false;
 
     [SerializeField] private float interactionDistance = 10.0f;
-    [SerializeField] private LayerMask pickupLayer,wallLayer;
-    [SerializeField] private GameObject guidanceText;
+    [SerializeField] private LayerMask pickupLayer,wallLayer,doorLayer;
+    [SerializeField] private GameObject guidanceText,doorDetectionText;
     [SerializeField] private bool itemPickedUp=false;
     [SerializeField] private Transform pickUpAttachPoint;
     [SerializeField] private GameObject currentItem;
     private const float backwardSpeed = 10.0f;
-   
+     
     // Start is called before the first frame update
     void Start()
     {
@@ -32,14 +33,14 @@ public class CameraMovement : MonoBehaviour
         rb= GetComponent<Rigidbody>();  
         flashLight.enabled = false;
         guidanceText = GameObject.Find("GuidanceText");
-        guidanceText.SetActive(false);
+        guidanceText.SetActive(false); doorDetectionText.SetActive(false);
         //InvokeRepeating("DetectObjectPickUps", 0.001f, 0.001f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        StartCoroutine(DetectObjectPickUps());
+        StartCoroutine(DetectObjectPickUps());StartCoroutine(ManipulateDoors());
         DetachObjectToArm();
        
     }
@@ -125,6 +126,7 @@ public class CameraMovement : MonoBehaviour
         bool rayHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactionDistance, pickupLayer);
         if (rayHit && WorldManager.Instance.displayedItemInfos.ContainsKey(hit.collider.gameObject.name))
         {
+            guidanceText.GetComponent<TextMeshProUGUI>().text = "Press E to Pick Up";
             guidanceText.SetActive(!itemPickedUp);
 
             Debug.Log("Found a " + hit.collider.name);
@@ -150,6 +152,40 @@ public class CameraMovement : MonoBehaviour
         }
 
        
+    }
+
+    private IEnumerator ManipulateDoors()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        RaycastHit hit;
+
+        bool rayHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactionDistance, doorLayer);
+
+        if(rayHit)
+        {
+            Debug.Log("Time to do something for the door!");
+            doorDetectionText.SetActive(true);
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                hit.collider.gameObject.GetComponent<DoorObject>().opened = !hit.collider.gameObject.GetComponent<DoorObject>().opened;
+            }
+
+            if (hit.collider.gameObject.GetComponent<DoorObject>().opened)
+            {
+                hit.collider.gameObject.GetComponent<Animator>().SetTrigger("Open");
+            }
+            else
+            {
+                hit.collider.gameObject.GetComponent<Animator>().SetTrigger("Close");
+            }
+
+        }
+        else
+        {
+            doorDetectionText.SetActive(false);
+        }
     }
     
 

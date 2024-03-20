@@ -21,6 +21,9 @@ public class SoundManager : MonoBehaviour
     public AudioSource BGM_AudioSource;
 
     public List<AudioClip> clips = new List<AudioClip>(); //Clips for indication sound in the UI
+
+    [Header("In-game Pause Menu")]
+    public Button SettingsBtn, MainMenuBtn, QuitBtn;
     private void Awake()
     {
         if (Instance == null)
@@ -28,7 +31,7 @@ public class SoundManager : MonoBehaviour
             // If no instance exists, this becomes the singleton instance
             Instance = this;
             // Ensure this object persists across scene loads
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(this);
 
             InitializeSounds();
         }
@@ -74,10 +77,7 @@ public class SoundManager : MonoBehaviour
 
         // Setup the sliders' initial values and callbacks here
     }
-    IEnumerator CacheNewUIElements()
-    {
-        yield return new WaitUntil(() => SceneManager.GetActiveScene().name == "SampleScene");
-    }
+  
     public void ShowAudioAdjustmentPanel(bool audioPageOpened)
     {
         audioAdjustmentPanel.SetActive(audioPageOpened);

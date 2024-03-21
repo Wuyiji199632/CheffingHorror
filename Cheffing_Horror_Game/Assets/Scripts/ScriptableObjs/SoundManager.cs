@@ -20,7 +20,9 @@ public class SoundManager : MonoBehaviour
 
     public AudioSource BGM_AudioSource;
 
-    public List<AudioClip> clips = new List<AudioClip>(); //Clips for indication sound in the UI
+    public List<AudioClip> clipsPlayedForUI = new List<AudioClip>(); //Clips for indication sound in the UI
+
+    public List<AudioClip> clipsPlayedForScene = new List<AudioClip>(); //Clips for indication sound in the scene during gameplay
 
     [Header("In-game Pause Menu")]
     public Button SettingsBtn, MainMenuBtn, QuitBtn;
@@ -133,10 +135,10 @@ public class SoundManager : MonoBehaviour
 
     public void PlayMouseHoverSound()
     {
-        if (clips.Count > 0)
+        if (clipsPlayedForUI.Count > 0)
         {
 
-            GameObject.Find("Sound_Ambient").GetComponent<AudioSource>().clip = clips[0];
+            GameObject.Find("Sound_Ambient").GetComponent<AudioSource>().clip = clipsPlayedForUI[0];
             AudioSource AmbientSoundSource = GameObject.Find("Sound_Ambient").GetComponent<AudioSource>();
             AmbientSoundSource.Play();
            
@@ -145,13 +147,53 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySelectionSound()
     {
-        if (clips.Count > 0)
+        if (clipsPlayedForUI.Count > 0)
         {
-
-            GameObject.Find("Sound_Ambient").GetComponent<AudioSource>().clip = clips[1];
-            AudioSource AmbientSoundSource = GameObject.Find("Sound_Ambient").GetComponent<AudioSource>();
+            AudioSource AmbientSoundSource = null;
+            GameObject.Find("Sound_Ambient").GetComponent<AudioSource>().clip = clipsPlayedForUI[1];
+            AmbientSoundSource = GameObject.Find("Sound_Ambient").GetComponent<AudioSource>();
             AmbientSoundSource.Play();
 
         }
+    }
+
+    public void PlayGameStartSound()
+    {
+        if (clipsPlayedForUI.Count > 0)
+        {
+            AudioSource AmbientSoundSource = null;
+            GameObject.Find("Sound_Ambient").GetComponent<AudioSource>().clip = clipsPlayedForUI[2];
+            AmbientSoundSource = GameObject.Find("Sound_Ambient").GetComponent<AudioSource>();
+            AmbientSoundSource.Play();
+
+        }
+    }
+
+    public void ChangeToInGameBGM()
+    {
+        AudioSource AmbientSoundSource = null;
+        GameObject.Find("Sound_BGM").GetComponent<AudioSource>().clip = clipsPlayedForUI[3];
+
+        AmbientSoundSource = GameObject.Find("Sound_BGM").GetComponent<AudioSource>();
+        AmbientSoundSource.Play();
+    }
+
+    public void PlayZappingSound()
+    {
+        AudioSource AmbientSoundSource = null;
+        GameObject.Find("Sound_Ambient").GetComponent<AudioSource>().clip = clipsPlayedForScene[0];
+        GameObject.Find("Sound_Ambient").GetComponent<AudioSource>().loop = true;
+        AmbientSoundSource = GameObject.Find("Sound_Ambient").GetComponent<AudioSource>();
+
+        AmbientSoundSource.Play();
+    }
+
+    public void StopZappingSound()
+    {
+        AudioSource AmbientSoundSource = null;
+        GameObject.Find("Sound_Ambient").GetComponent<AudioSource>().clip = clipsPlayedForScene[0];
+
+        AmbientSoundSource = GameObject.Find("Sound_Ambient").GetComponent<AudioSource>();
+        AmbientSoundSource.Stop();
     }
 }

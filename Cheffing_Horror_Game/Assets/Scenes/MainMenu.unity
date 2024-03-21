@@ -786,18 +786,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1508898057}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: PlaySelectionSound
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &468147102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -871,7 +859,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1508898057}
           m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-          m_MethodName: PlaySelectionSound
+          m_MethodName: PlayGameStartSound
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -4296,10 +4284,16 @@ MonoBehaviour:
   musicVolumeSlider: {fileID: 0}
   creatureVolumeSlider: {fileID: 0}
   BGM_AudioSource: {fileID: 0}
-  clips:
+  clipsPlayedForUI:
   - {fileID: 8300000, guid: 30cf4d9b43706a3439f58fe37150d6b6, type: 3}
   - {fileID: 8300000, guid: 1d76abd95de24e5449bb1fa50ed8c4e0, type: 3}
   - {fileID: 8300000, guid: 0bfe9e975efa3c740a9e213bd49ebfe8, type: 3}
+  - {fileID: 8300000, guid: e71f93d187f7f09408a3a7fd4a52551d, type: 3}
+  clipsPlayedForScene:
+  - {fileID: 8300000, guid: b0efc3765a9eda6408efdb8681641759, type: 3}
+  SettingsBtn: {fileID: 0}
+  MainMenuBtn: {fileID: 0}
+  QuitBtn: {fileID: 0}
 --- !u!1 &1651461523
 GameObject:
   m_ObjectHideFlags: 0

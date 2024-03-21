@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundName: Ambient
   clip: {fileID: 0}
-  audioMixerGroup: {fileID: 24300002, guid: 09795c7db343a664abcf5ab63b493f92, type: 2}
+  audioMixerGroup: {fileID: 2273723894296957952, guid: 09795c7db343a664abcf5ab63b493f92,
+    type: 2}
   volume: 0.7
   pitch: 1
   loop: 0

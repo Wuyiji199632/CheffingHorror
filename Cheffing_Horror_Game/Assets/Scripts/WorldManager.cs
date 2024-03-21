@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.UI;
+using UnityEngine.Analytics;
+using UnityEngine.EventSystems;
+using EventTrigger = UnityEngine.EventSystems.EventTrigger;
+
 public class WorldManager : MonoBehaviour //This is the class that controls the environmentally related gameplay mechanics
 {
     [SerializeField] private GameObject pauseMenu;
@@ -18,6 +22,21 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
     public Dictionary<string, GameObject> displayedItemInfos = new Dictionary<string, GameObject>();
 
     public List<GameObject> itemInfos = new List<GameObject>();
+
+    public List<GameObject> alienSelections = new List<GameObject>();
+
+    public GameObject alienSelectionPage;
+
+    private CameraMovement player;
+
+
+    [SerializeField] private Button confirmSelectionBtn;
+
+    public GameObject alienTube, alienSelected; //Alien to come up need further logics to pop in 
+
+    private Animator alienTubeAnim;
+
+    public bool alienComesUp = false;
 
     private void Awake()
     {
@@ -48,12 +67,19 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
     void Start()
     {
         pauseMenu.SetActive(false);
+
+        alienTubeAnim= alienTube.GetComponent<Animator>();
+
+        player =GameObject.FindGameObjectWithTag("Player").GetComponent<CameraMovement>();            
+
+        SoundManager.Instance.ChangeToInGameBGM();
        
+
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape)&&!player.selectionPageOpened)
         {
             ManipulatePauseMenu();
         }
@@ -83,17 +109,46 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
         });
 
     }
-    private IEnumerator PauseGameAndSetUpUI()
+    private void AddHoverSoundToButton(Button button)
+    {
+        EventTrigger trigger = button.gameObject.GetComponent<EventTrigger>() ?? button.gameObject.AddComponent<EventTrigger>();
+
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.PointerEnter;
+        entry.callback.AddListener((eventData) => { SoundManager.Instance.PlayMouseHoverSound(); });
+
+        trigger.triggers.Add(entry);
+    }
+
+    private IEnumerator PauseGameAndSetUpUI() // Used for playing sound effect for the buttons
     {
         yield return new WaitUntil(() => paused);
 
-        SoundManager.Instance.SettingsBtn = GameObject.Find("BTN_Settings").GetComponent<Button>();
 
-        SoundManager.Instance.MainMenuBtn = GameObject.Find("BTN_MainMenu").GetComponent<Button>();
+        if (pauseMenu.activeInHierarchy)
+        {
+            SoundManager.Instance.SettingsBtn = GameObject.Find("BTN_Settings").GetComponent<Button>();
 
-        SoundManager.Instance.QuitBtn = GameObject.Find("BTN_Quit").GetComponent<Button>();
+            SoundManager.Instance.MainMenuBtn = GameObject.Find("BTN_MainMenu").GetComponent<Button>();
 
-        yield return new WaitUntil(() => !paused);
+            SoundManager.Instance.QuitBtn = GameObject.Find("BTN_Quit").GetComponent<Button>();
+
+            AddHoverSoundToButton(SoundManager.Instance.SettingsBtn);
+            AddHoverSoundToButton(SoundManager.Instance.MainMenuBtn);
+            AddHoverSoundToButton(SoundManager.Instance.QuitBtn);
+
+
+            SoundManager.Instance.SettingsBtn.onClick.AddListener(() => SoundManager.Instance.PlaySelectionSound());
+
+            SoundManager.Instance.MainMenuBtn.onClick.AddListener(() => SoundManager.Instance.PlaySelectionSound());
+
+            SoundManager.Instance.QuitBtn.onClick.AddListener(() => SoundManager.Instance.PlaySelectionSound());
+
+
+        }
+      
+   
+       yield return new WaitUntil(() => !paused);
 
         SoundManager.Instance.SettingsBtn = null;
 
@@ -104,7 +159,18 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
 
     }
 
-   
+    public IEnumerator PlayConfirmationSound()
+    {
+        yield return new WaitUntil(() => player.selectionPageOpened);
+
+        if (alienSelectionPage.activeInHierarchy)
+        {
+            AddHoverSoundToButton(confirmSelectionBtn);
+
+            confirmSelectionBtn.onClick.AddListener(()=> SoundManager.Instance.PlaySelectionSound());
+        }
+    }
+
     public void ShowItemInstruction(string itemName, bool showing)
     {
         if (displayedItemInfos.TryGetValue(itemName, out var itemInfo))
@@ -135,6 +201,24 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
         {
             Debug.LogWarning($"Item instruction info for {itemName} not found.");
         }
+    }
+
+
+    public IEnumerator AlienComesUpForInvestigation()
+    {
+        yield return new WaitUntil(() => alienComesUp);
+
+        alienTubeAnim.SetTrigger("Up");
+
+
+    }
+
+
+
+
+    public void ConfirmAlienSelection()
+    {
+        Debug.Log("Alien selection confirmed!");
     }
 
 }

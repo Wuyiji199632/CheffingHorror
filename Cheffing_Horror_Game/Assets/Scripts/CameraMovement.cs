@@ -26,7 +26,9 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
     [SerializeField] private GameObject currentItem;
     private const float backwardSpeed = 10.0f;
     public bool selectionPageOpened = false;
-    
+    [SerializeField]
+    private bool notepadOpened = false;
+    public GameObject notepad;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,14 +36,14 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         rb= GetComponent<Rigidbody>();  
         flashLight.enabled = false;
         guidanceText = GameObject.Find("GuidanceText");
-        guidanceText.SetActive(false); doorDetectionText.SetActive(false);
+        guidanceText.SetActive(false); doorDetectionText.SetActive(false);notepad.SetActive(false);
         //InvokeRepeating("DetectObjectPickUps", 0.001f, 0.001f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        StartCoroutine(DetectObjectPickUps());StartCoroutine(ManipulateDoors());StartCoroutine(InteractWithStaticObjs());
+        StartCoroutine(DetectObjectPickUps());StartCoroutine(ManipulateDoors());StartCoroutine(InteractWithStaticObjs());StartCoroutine(TakingNotesOnNotepad());
         DetachObjectToArm();
        
     }
@@ -154,7 +156,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
     private IEnumerator DetectObjectPickUps()
     {
 
-        bool rayHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactionDistance, pickupLayer)&&!itemPickedUp;
+        bool rayHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactionDistance, pickupLayer)&&!itemPickedUp&&!notepadOpened;
         if (rayHit && WorldManager.Instance.displayedItemInfos.ContainsKey(hit.collider.gameObject.name))
         {
             guidanceText.GetComponent<TextMeshProUGUI>().text = "Press E to Pick Up";
@@ -190,7 +192,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
         RaycastHit hit;
 
-        bool rayHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactionDistance, doorLayer);
+        bool rayHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactionDistance, doorLayer)&&!notepadOpened;
 
         if(rayHit)
         {
@@ -260,9 +262,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
                
                 selectionPageOpened = !selectionPageOpened;
 
-               
-              
-               
+                                        
             }
 
             
@@ -278,13 +278,30 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
        
     }
+
+    private IEnumerator TakingNotesOnNotepad()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+       
+        if(Input.GetKeyDown(KeyCode.N))
+        {
+            notepadOpened = !notepadOpened;
+          
+        }
+
+        if (notepadOpened)
+            notepad.SetActive(true);
+        else
+            notepad.SetActive(false);
+    }
     private void PauseForAlienSelection()
     {
-        //Time.timeScale = selectionPageOpened ? 0.0f : 1.0f;
+        Time.timeScale = selectionPageOpened ? 0.0f : 1.0f;
         Cursor.visible = selectionPageOpened ? true : false;
 
 
-        Cursor.lockState = !selectionPageOpened ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.lockState = !selectionPageOpened&&!WorldManager.Instance.paused ? CursorLockMode.Locked : CursorLockMode.None;
 
         WorldManager.Instance.alienSelectionPage.SetActive(selectionPageOpened);
     }
@@ -362,7 +379,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         {
             case "Torch":
                
-                currentItem.transform.localPosition = new Vector3(0.146f, -0.688f, -0.115f);
+                currentItem.transform.localPosition = new Vector3(0.146f, -0.488f, -0.115f);
                 currentItem.transform.localRotation = Quaternion.Euler(0, 90, 0);
                
                 break;
@@ -378,6 +395,8 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
                 break;
         }
     }
+
+    
 
    
 }

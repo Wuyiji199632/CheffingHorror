@@ -11,7 +11,7 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
 {
     [SerializeField] private GameObject pauseMenu;
 
-    [SerializeField] private bool paused = false;
+    public bool paused = false;
 
     public GameObject currentItemInfo;
 
@@ -25,7 +25,7 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
 
     public List<GameObject> alienSelections = new List<GameObject>();
 
-    public GameObject alienSelectionPage;
+    public GameObject alienSelectionPage,alienMainProfilePage,alienProfilePage;
 
     private CameraMovement player;
 
@@ -37,6 +37,8 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
     private Animator alienTubeAnim;
 
     public bool alienComesUp = false;
+
+    
 
     private void Awake()
     {
@@ -72,8 +74,9 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
 
         player =GameObject.FindGameObjectWithTag("Player").GetComponent<CameraMovement>();            
 
-        SoundManager.Instance.ChangeToInGameBGM();
-       
+        SoundManager.Instance.ChangeToInGameBGM(); alienSelectionPage.SetActive(false); alienMainProfilePage.SetActive(true); alienProfilePage.SetActive(false);
+
+
 
     }
 
@@ -144,6 +147,8 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
 
             SoundManager.Instance.QuitBtn.onClick.AddListener(() => SoundManager.Instance.PlaySelectionSound());
 
+            SoundManager.Instance.QuitBtn.onClick.AddListener(()=>QuitGame());
+
 
         }
       
@@ -161,9 +166,9 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
 
     public IEnumerator PlayConfirmationSound()
     {
-        yield return new WaitUntil(() => player.selectionPageOpened);
+        yield return new WaitUntil(() => player.selectionPageOpened&&!paused);
 
-        if (alienSelectionPage.activeInHierarchy)
+        if (alienProfilePage.activeInHierarchy)
         {
             AddHoverSoundToButton(confirmSelectionBtn);
 
@@ -213,12 +218,30 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
 
     }
 
+    public void DisplaySelectedAlienProfile() // Need more complex logics after all the alien creatures are created
+    {
+        alienProfilePage.SetActive(true);
 
+        alienMainProfilePage.SetActive(false);
+    }
 
 
     public void ConfirmAlienSelection()
     {
         Debug.Log("Alien selection confirmed!");
+
+        player.selectionPageOpened = false; alienSelectionPage.SetActive(player.selectionPageOpened);
+
+        Time.timeScale = player.selectionPageOpened ? 0.0f : 1.0f;
+        Cursor.visible = player.selectionPageOpened ? true : false;
+
+
+        Cursor.lockState = !player.selectionPageOpened && !WorldManager.Instance.paused ? CursorLockMode.Locked : CursorLockMode.None;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
 }

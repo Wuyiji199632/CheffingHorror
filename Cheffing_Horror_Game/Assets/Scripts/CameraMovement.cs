@@ -26,8 +26,8 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
     [SerializeField] private GameObject currentItem;
     private const float backwardSpeed = 10.0f;
     public bool selectionPageOpened = false;
-    [SerializeField]
-    private bool notepadOpened = false;
+    
+    public  bool notepadOpened = false;
     public GameObject notepad;
     // Start is called before the first frame update
     void Start()

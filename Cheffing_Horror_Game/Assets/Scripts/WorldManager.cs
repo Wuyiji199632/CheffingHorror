@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Analytics;
 using UnityEngine.EventSystems;
 using EventTrigger = UnityEngine.EventSystems.EventTrigger;
+using UnityEngine.SceneManagement;
 
 public class WorldManager : MonoBehaviour //This is the class that controls the environmentally related gameplay mechanics
 {
@@ -38,7 +39,7 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
 
     public bool alienComesUp = false;
 
-    
+    [SerializeField] private GameObject settingsMenuInGame;
 
     private void Awake()
     {
@@ -76,7 +77,7 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
 
         SoundManager.Instance.ChangeToInGameBGM(); alienSelectionPage.SetActive(false); alienMainProfilePage.SetActive(true); alienProfilePage.SetActive(false);
 
-
+        //InvokeRepeating(nameof(SetCursorVisibility), 1, 1);
 
     }
 
@@ -88,15 +89,21 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
         }
       
     }
-
+    private void LateUpdate()
+    {
+        SetCursorVisibility();
+    }
+    private void SetCursorVisibility()
+    {
+        Cursor.visible = paused || player.notepadOpened;
+    }
     private async Task ManipulatePauseMenu()
     {
 
         await Task.Run(() =>
         {
             // Your background task here
-            
-           
+                     
         });
 
 
@@ -107,7 +114,7 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
             pauseMenu.SetActive(paused);
             Time.timeScale = paused ? 0 : 1;
             Cursor.lockState =!paused?CursorLockMode.Locked: CursorLockMode.None;
-
+           
             StartCoroutine(PauseGameAndSetUpUI());
         });
 
@@ -226,7 +233,7 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
     }
 
 
-    public void ConfirmAlienSelection()
+    public void ConfirmAlienSelection() //Need further updates as there are multiple aliens to select from. The logics of this should not be smplified
     {
         Debug.Log("Alien selection confirmed!");
 
@@ -243,5 +250,18 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
     {
         Application.Quit();
     }
+
+    public void ShowSettingsPage() => settingsMenuInGame.SetActive(true);
+
+    public void GoBackToPauseMenu()
+    {
+        settingsMenuInGame.SetActive(false);
+        pauseMenu.SetActive(true);
+    }
+
+    public void GoBackToMainMenu() => SceneManager.LoadScene("MainMenu");
+
+
+
 
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class PickUpItem : MonoBehaviour
 {
     private Rigidbody rb;
@@ -15,9 +16,17 @@ public class PickUpItem : MonoBehaviour
     public bool thrown = false;
 
     public LayerMask groundLayer;
+
+    private AudioSource pickupAudio;
+
+    public List<AudioClip> pickupAudioClips;
+
+    public bool itemFunctionOn = false;
     private void Start()
     {
         rb = GetComponent<Rigidbody>(); player = GameObject.FindGameObjectWithTag("Player").GetComponent<CameraMovement>();
+
+        pickupAudio=GetComponent<AudioSource>();
     }
     private void LateUpdate()
     {
@@ -40,6 +49,15 @@ public class PickUpItem : MonoBehaviour
         if(other != null)
         {
             thrown = false;
+        }
+    }
+
+   
+    public void PlayTorchSounds()
+    {
+        if(gameObject.name== "Torch")
+        {
+            pickupAudio.clip = itemFunctionOn ? pickupAudioClips[0] : pickupAudioClips[1]; pickupAudio.Play();
         }
     }
 

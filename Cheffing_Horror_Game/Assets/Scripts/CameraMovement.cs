@@ -17,7 +17,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
     public RaycastHit hit;
     [SerializeField] Light flashLight;
 
-    private bool itemFunctionOn = false;
+    
     [SerializeField] private float interactionDistance = 10.0f;
     [SerializeField] private LayerMask pickupLayer,wallLayer,doorLayer,interactableLayer;
     [SerializeField] private GameObject guidanceText,doorDetectionText,beginResearchText;
@@ -29,6 +29,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
     
     public  bool notepadOpened = false;
     public GameObject notepad;
+    [SerializeField] private GameObject pickupItemRenderCam;
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +37,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         rb= GetComponent<Rigidbody>();  
         flashLight.enabled = false;
         guidanceText = GameObject.Find("GuidanceText");
-        guidanceText.SetActive(false); doorDetectionText.SetActive(false);notepad.SetActive(false);
+        guidanceText.SetActive(false); doorDetectionText.SetActive(false);notepad.SetActive(false); pickupItemRenderCam.SetActive(false);
         //InvokeRepeating("DetectObjectPickUps", 0.001f, 0.001f);
     }
 
@@ -94,30 +95,34 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         if(!itemPickedUp) { return; }
         if (Input.GetMouseButtonDown(0))
         {
+            PickUpItem item = currentItem.GetComponent<PickUpItem>();
             //Differentiate the functionalities in terms of item names
             if (currentItem.name == "Torch")
             {
-                if (!itemFunctionOn)
+               
+                if (!item.itemFunctionOn)
                 {
-                    flashLight.enabled = true; itemFunctionOn = true;
+                    flashLight.enabled = true; item.itemFunctionOn = true;
                 }
                 else
                 {
-                    flashLight.enabled = false; itemFunctionOn = false;
+                    flashLight.enabled = false; item.itemFunctionOn = false;
                 }
+
+                item.PlayTorchSounds();
             }
 
             else if (currentItem.name == "Taser")
             {
-                if (!itemFunctionOn)
+                if (!item.itemFunctionOn)
                 {
-                    Debug.Log($"Taser turned on!"); itemFunctionOn = true;
+                    Debug.Log($"Taser turned on!"); item.itemFunctionOn = true;
 
                     SoundManager.Instance.PlayZappingSound();
                 }
                 else
                 {
-                    Debug.Log($"Taser turned off!"); itemFunctionOn = false;
+                    Debug.Log($"Taser turned off!"); item.itemFunctionOn = false;
 
                     SoundManager.Instance.StopZappingSound();
                 }
@@ -157,7 +162,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
     {
 
         bool rayHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactionDistance, pickupLayer)&&!itemPickedUp&&!notepadOpened;
-        if (rayHit && WorldManager.Instance.displayedItemInfos.ContainsKey(hit.collider.gameObject.name))
+        if (rayHit && WorldManager.Instance.displayedItemInfos.ContainsKey(hit.collider.gameObject.name)) //Need to make sense that the name for the object of display info is the same as the object to pick up
         {
             guidanceText.GetComponent<TextMeshProUGUI>().text = "Press E to Pick Up";
             guidanceText.SetActive(!itemPickedUp);
@@ -203,7 +208,10 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
             if (Input.GetKeyDown(KeyCode.Tab))
             {
                 hit.collider.gameObject.GetComponent<DoorObject>().opened = !hit.collider.gameObject.GetComponent<DoorObject>().opened;
-
+                DoorObject doorObject = hit.collider.gameObject.GetComponent<DoorObject>();               
+               
+                doorObject.PlayDoorSounds();
+             
                 if (hit.collider.gameObject.GetComponent<DoorObject>().opened)
                 {
                     hit.collider.gameObject.GetComponent<Animator>().SetTrigger("Open");
@@ -212,6 +220,8 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
                 {
                     hit.collider.gameObject.GetComponent<Animator>().SetTrigger("Close");
                 }
+
+                
             }
 
             
@@ -314,17 +324,41 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
             Debug.Log($"Picked up {hit.collider.gameObject.name}");
 
             AttachObjectToArm(hit.collider.gameObject);
+
+           
         }
-      
-      
+
+        StartCoroutine(RenderItemPickedUpCorrectlyWhenPickedUp());
+
+
+        StartCoroutine(RenderItemPickedUpCorrectlyWhenNotPickedUp());
+
     }
+
+    private IEnumerator RenderItemPickedUpCorrectlyWhenPickedUp()
+    {
+        yield return new WaitUntil(() => itemPickedUp);
+
+        pickupItemRenderCam.SetActive(itemPickedUp);
+
+    }
+
+    private IEnumerator RenderItemPickedUpCorrectlyWhenNotPickedUp()
+    {
+        yield return new WaitUntil(() => !itemPickedUp);
+
+        pickupItemRenderCam.SetActive(itemPickedUp);
+
+    }
+
+
     private void ReleaseItem()
     {
         currentItem.GetComponent<Rigidbody>().isKinematic = false;
        
         if (currentItem.name == "Torch")
         {
-            flashLight.enabled = false; itemFunctionOn = false;
+            flashLight.enabled = false;currentItem.GetComponent<PickUpItem>().itemFunctionOn = false;
         }
 
         itemPickedUp = !itemPickedUp;
@@ -358,7 +392,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
             if (currentItem.name == "Torch")
             {
                 flashLight.enabled = false;
-                itemFunctionOn = false;
+                currentItem.GetComponent<PickUpItem>().itemFunctionOn = false;
             }
 
             // Detach the item from the player

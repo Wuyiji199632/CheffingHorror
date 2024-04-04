@@ -6050,6 +6050,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   pickupAudioClips: []
+  itemFunctionOn: 0
 --- !u!82 &1177511353
 AudioSource:
   m_ObjectHideFlags: 0
@@ -10117,6 +10118,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   pickupAudioClips: []
+  itemFunctionOn: 0
 --- !u!82 &586661126636689188
 AudioSource:
   m_ObjectHideFlags: 0
@@ -11109,6 +11111,7 @@ MonoBehaviour:
   pickupAudioClips:
   - {fileID: 8300000, guid: 46dbb99988794c54ea2b5272ca4a820e, type: 3}
   - {fileID: 8300000, guid: 061991837889bf540986ff0716159e0e, type: 3}
+  itemFunctionOn: 0
 --- !u!82 &919132148207225297
 AudioSource:
   m_ObjectHideFlags: 0
@@ -23706,6 +23709,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   pickupAudioClips: []
+  itemFunctionOn: 0
 --- !u!82 &6286245209635576237
 AudioSource:
   m_ObjectHideFlags: 0
@@ -27794,6 +27798,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   pickupAudioClips: []
+  itemFunctionOn: 0
 --- !u!82 &7716782425095235492
 AudioSource:
   m_ObjectHideFlags: 0

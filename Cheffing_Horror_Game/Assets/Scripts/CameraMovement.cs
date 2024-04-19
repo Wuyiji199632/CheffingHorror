@@ -19,7 +19,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
     
     [SerializeField] private float interactionDistance = 10.0f;
-    [SerializeField] private LayerMask pickupLayer,wallLayer,doorLayer,interactableLayer;
+    [SerializeField] private LayerMask pickupLayer,wallLayer,doorLayer,interactableLayer,renderedLayer;
     [SerializeField] private GameObject guidanceText,doorDetectionText,beginResearchText;
     [SerializeField] private bool itemPickedUp=false;
     [SerializeField] private Transform pickUpAttachPoint;
@@ -30,6 +30,8 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
     public  bool notepadOpened = false;
     public GameObject notepad;
     [SerializeField] private GameObject pickupItemRenderCam;
+    public List<PickUpItem> pickUpItems = new List<PickUpItem>();
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -38,7 +40,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         flashLight.enabled = false;
         guidanceText = GameObject.Find("GuidanceText");
         guidanceText.SetActive(false); doorDetectionText.SetActive(false);notepad.SetActive(false); pickupItemRenderCam.SetActive(false);
-        //InvokeRepeating("DetectObjectPickUps", 0.001f, 0.001f);
+       
     }
 
     // Update is called once per frame
@@ -223,8 +225,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
                 
             }
-
-            
+          
         }
         else
         {
@@ -274,7 +275,6 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
                                         
             }
-
             
         }
         else
@@ -325,13 +325,20 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
             AttachObjectToArm(hit.collider.gameObject);
 
-           
+            hit.collider.gameObject.layer = LayerMask.NameToLayer("Rendered");
+
+
+        }
+        else
+        {
+           DetachObjectToArm(); hit.collider.gameObject.layer = LayerMask.NameToLayer("PickUp");
+
         }
 
-        StartCoroutine(RenderItemPickedUpCorrectlyWhenPickedUp());
+       StartCoroutine(RenderItemPickedUpCorrectlyWhenPickedUp());
 
 
-        StartCoroutine(RenderItemPickedUpCorrectlyWhenNotPickedUp());
+       StartCoroutine(RenderItemPickedUpCorrectlyWhenNotPickedUp());
 
     }
 
@@ -341,6 +348,8 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
         pickupItemRenderCam.SetActive(itemPickedUp);
 
+        
+
     }
 
     private IEnumerator RenderItemPickedUpCorrectlyWhenNotPickedUp()
@@ -349,22 +358,12 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
         pickupItemRenderCam.SetActive(itemPickedUp);
 
-    }
-
-
-    private void ReleaseItem()
-    {
-        currentItem.GetComponent<Rigidbody>().isKinematic = false;
        
-        if (currentItem.name == "Torch")
-        {
-            flashLight.enabled = false;currentItem.GetComponent<PickUpItem>().itemFunctionOn = false;
-        }
 
-        itemPickedUp = !itemPickedUp;
-        currentItem.transform.parent = null;
-        currentItem = null;
     }
+
+
+
     private void AttachObjectToArm(GameObject itemPicked)
     {
         if (itemPicked == null) return;
@@ -389,7 +388,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
             currentItem.GetComponent<Collider>().isTrigger = false;
             currentItem.GetComponent<Rigidbody>().isKinematic = false;
 
-            if (currentItem.name == "Torch")
+            if (currentItem.name == "Torch")//Turn off the torch
             {
                 flashLight.enabled = false;
                 currentItem.GetComponent<PickUpItem>().itemFunctionOn = false;

@@ -35,7 +35,7 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
 
     public GameObject alienTube, alienSelected; //Alien to come up need further logics to pop in 
 
-    private Animator alienTubeAnim;
+    private Animator alienPlatformAnim;
 
     public bool alienComesUp = false;
 
@@ -71,7 +71,7 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
     {
         pauseMenu.SetActive(false);
 
-        alienTubeAnim= alienTube.GetComponent<Animator>();
+        alienPlatformAnim= alienTube.GetComponent<Animator>();
 
         player =GameObject.FindGameObjectWithTag("Player").GetComponent<CameraMovement>();            
 
@@ -220,7 +220,7 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
     {
         yield return new WaitUntil(() => alienComesUp);
 
-        alienTubeAnim.SetTrigger("Up");
+        alienPlatformAnim.SetTrigger("Up");
 
 
     }

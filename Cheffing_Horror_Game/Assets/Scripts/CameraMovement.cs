@@ -39,6 +39,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         rb= GetComponent<Rigidbody>();  
         flashLight.enabled = false;
         guidanceText = GameObject.Find("GuidanceText");
+        
         guidanceText.SetActive(false); doorDetectionText.SetActive(false);notepad.SetActive(false); pickupItemRenderCam.SetActive(false);
        
     }
@@ -326,7 +327,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
             AttachObjectToArm(hit.collider.gameObject);
 
             hit.collider.gameObject.layer = LayerMask.NameToLayer("Rendered");
-
+            
 
         }
         else

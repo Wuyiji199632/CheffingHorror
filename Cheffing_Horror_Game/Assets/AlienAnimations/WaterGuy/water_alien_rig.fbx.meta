@@ -3,7 +3,62 @@ guid: 9b891c0a0a03f0648a2a5af3b6ff73e2
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Automotive led lights
+    second: {fileID: 2100000, guid: a73fb9281a1188c44b27abb1020960d4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Automotive led lights.001
+    second: {fileID: 2100000, guid: 0a14db5c2c1799c4295202babe6ceb11, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Carbon Fiber Procedural
+    second: {fileID: 2100000, guid: d029b458bee469248ac11acee2781df9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cloth Fabric
+    second: {fileID: 2100000, guid: b5bcec7c5ffcc5845829ed61198f81c2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cycles Red & Silver Smart Material
+    second: {fileID: 2100000, guid: 70347ad1e85997748b4fcdb28d791a2c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: aa78eea6fc297924d859eec5509b2732, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.003
+    second: {fileID: 2100000, guid: b80efc45bc086f145ade7bf014de7285, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.004
+    second: {fileID: 2100000, guid: 65f984a6d3f9bc7429facd515c12129b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.005
+    second: {fileID: 2100000, guid: ff943f12e6170b841be1c79d05c25d78, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Procedural Hologram
+    second: {fileID: 2100000, guid: 02a2ce08735ff8042811471bb4094ed1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Scratched Metal.001
+    second: {fileID: 2100000, guid: 5bf7da69b576d144eb9f31b8815200cf, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

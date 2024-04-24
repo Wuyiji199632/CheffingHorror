@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c5100d145ac40ba4bb886b490f7fee57
+guid: 19d7a8b0e7addb54389f3a4eca2a0d67
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
@@ -7,13 +7,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
-      name: fish_alien_low_standardSurface2.001_BaseMap
-    second: {fileID: 2800000, guid: d206cf969904a3e4f8389bb20515d852, type: 3}
+      name: FishGuy_BaseMap
+    second: {fileID: 2800000, guid: 9b6ea80eadb1b6548989caddf10260cc, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
-      name: fish_alien_low_standardSurface2.001_Normal
-    second: {fileID: 2800000, guid: 035b093f4f2be6b45a6502394e2c94d6, type: 3}
+      name: FishGuy_Normal
+    second: {fileID: 2800000, guid: fdea86d3cf124a446b8c1a934e0077fc, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

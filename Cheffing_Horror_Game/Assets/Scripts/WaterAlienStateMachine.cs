@@ -6,7 +6,7 @@ using UnityEngine;
 public class WaterAlienStateMachine : AlienManager
 {
 
-
+    
     public override void OnStateEnter()
     {
         Debug.Log("Water Alien State Enter");
@@ -69,6 +69,53 @@ public class WaterAlienStateMachine : AlienManager
     {
         OnStateStay();
     }
+    #region Functions for transtions among states
+
+    private void ProcessIdle()
+    {
+
+    }
+
+    private void ProcessEat()
+    {
+
+    }
+
+    private void ProcessAttack()
+    {
+
+    }
+
+    private void ProcessHurt()
+    {
+
+    }
+    private void ProcessHurtLong()
+    {
+
+    }
+    private void ProcessHurtQuick()
+    {
+
+    }
+    private void ProcessBlinded()
+    {
+
+    }
+    private void ProcessScared()
+    {
+
+    }
+    private void ProcessTased()
+    {
+
+    }
+    private void ProcessDead()
+    {
+
+    }
+    #endregion
+
 }
 
 

@@ -21,34 +21,44 @@ public class WaterAlienStateMachine : AlienManager
         {
             case AlienState.State.Idle:
                 Debug.Log("Water Alien is Idle");
+                ProcessIdle();
                 break;
             case AlienState.State.Eat:
                 Debug.Log("Water Alien Eats!");
+                ProcessEat();
                 break;
 
             case AlienState.State.Attack:
                 Debug.Log("Water Alien Attacks!");
+                ProcessAttack();
                 break;
             case AlienState.State.Hurt:
                 Debug.Log("Water Alien is Hurt!");
+                ProcessHurt();
                 break;
             case AlienState.State.HurtLong:
                 Debug.Log("Water Alien is Hurt Long!");
+                ProcessHurtLong();
                 break;
             case AlienState.State.HurtQuick:
                 Debug.Log("Water Alien is Hurt Quick!");
+                ProcessHurtQuick();
                 break;
             case AlienState.State.Blinded:
                 Debug.Log("Water Alien is Blinded!");
+                ProcessBlinded();
                 break;
             case AlienState.State.Scared:
                 Debug.Log("Water Alien is Scared!");
+                ProcessScared();
                 break;
             case AlienState.State.Tased:
                 Debug.Log("Water Alien is Tased!");
+                ProcessTased();
                 break;
             case AlienState.State.Dead:
                 Debug.Log("Water Alien is Dead!");
+                ProcessDead();
                 break;
 
         }

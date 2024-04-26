@@ -22,12 +22,30 @@ public class PickUpItem : MonoBehaviour
     public List<AudioClip> pickupAudioClips;
 
     public bool itemFunctionOn = false;
+
+    public bool canTase = false;
     private void Start()
     {
         rb = GetComponent<Rigidbody>(); player = GameObject.FindGameObjectWithTag("Player").GetComponent<CameraMovement>();
 
         pickupAudio=GetComponent<AudioSource>();
     }
+
+
+    private void Update()
+    {
+        if ((this.name=="Taser"))
+        {
+            canTase= itemFunctionOn;
+
+            if (canTase)
+            {
+                Debug.Log("Alien is able to be tased!");
+            }
+        }
+    }
+
+
     private void LateUpdate()
     {
         if (this.name == "Rubber_Duck")
@@ -40,7 +58,7 @@ public class PickUpItem : MonoBehaviour
                
             }
 
-            rb.velocity = rb.velocity+ direction*forwardSpeed*Time.deltaTime;
+            rb.velocity = rb.velocity+ direction*forwardSpeed*Time.deltaTime; //Will consider playing the pinching sound
         }
     }
 

@@ -117,18 +117,26 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
             else if (currentItem.name == "Taser")
             {
+               
+                Debug.Log($"Current position for item attach point is {pickUpAttachPoint.localPosition}");
                 if (!item.itemFunctionOn)
                 {
                     Debug.Log($"Taser turned on!"); item.itemFunctionOn = true;
-
+                    
+                    
                     SoundManager.Instance.PlayZappingSound();
+                   
+
                 }
                 else
                 {
                     Debug.Log($"Taser turned off!"); item.itemFunctionOn = false;
-
+                    
                     SoundManager.Instance.StopZappingSound();
+                    
                 }
+
+                AdjustTransformsBasedOnItemName(currentItem);
             }
 
             else if(currentItem.name == "Rubber_Duck")
@@ -418,7 +426,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
                
                 break;
             case "Taser":                   
-                currentItem.transform.localPosition = new Vector3(0, -0.7f, -1.7f);
+                currentItem.transform.localPosition = new Vector3(0, -0.7f,currentItem.GetComponent<PickUpItem>().itemFunctionOn?1.0f: 0);
                 currentItem.GetComponent<Collider>().isTrigger = true;
                 break;
             case "Rubber_Duck":

@@ -83,7 +83,7 @@ public class WaterAlienStateMachine : AlienManager
 
     private void ProcessIdle()
     {
-
+        alienAnim.SetTrigger("Idle");
     }
 
     private void ProcessEat()

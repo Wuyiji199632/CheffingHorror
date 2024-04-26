@@ -598,7 +598,7 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 1
-  m_Height: 7
+  m_Height: 6
   m_Direction: 1
   m_Center: {x: 0, y: -0.29, z: 0}
 --- !u!54 &138658925
@@ -10441,7 +10441,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132148207225292}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -38.69, y: 4.837, z: -86.459}
+  m_LocalPosition: {x: -38.69, y: 4.837, z: -86.67}
   m_LocalScale: {x: 0.9000002, y: 0.9, z: 0.9000002}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -10661,7 +10661,7 @@ GameObject:
   - component: {fileID: 4167280742412992167}
   - component: {fileID: 5835772782351965055}
   - component: {fileID: 2570646524404057019}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10951,7 +10951,7 @@ GameObject:
   - component: {fileID: 95869039713124789}
   - component: {fileID: 3961835027469176336}
   - component: {fileID: 1233903553560509146}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: DuckBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12677,7 +12677,7 @@ GameObject:
   - component: {fileID: 3667450079969017123}
   - component: {fileID: 7915377512540803319}
   - component: {fileID: 1836108055619782174}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: Torch Grip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16836,7 +16836,7 @@ GameObject:
   - component: {fileID: 214278345935100124}
   - component: {fileID: 7912167876841224935}
   - component: {fileID: 6806849255187350999}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: Battery Plate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17209,7 +17209,7 @@ GameObject:
   - component: {fileID: 1853215232916726967}
   - component: {fileID: 9220086914132633880}
   - component: {fileID: 8032750205266300786}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -22578,7 +22578,7 @@ GameObject:
   - component: {fileID: 2949684037129259154}
   - component: {fileID: 8929940853969012419}
   - component: {fileID: 2619580411993127950}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: Wind Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23644,7 +23644,7 @@ GameObject:
   - component: {fileID: 6210262516165754930}
   - component: {fileID: 9121796303917490180}
   - component: {fileID: 3940598310360172905}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: Bulbs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28510,7 +28510,7 @@ GameObject:
   - component: {fileID: 7899099929486236381}
   - component: {fileID: 4327267027181376118}
   - component: {fileID: 3574604348638899343}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35316,7 +35316,7 @@ GameObject:
   - component: {fileID: 93893283919209632}
   - component: {fileID: 3545361793573986871}
   - component: {fileID: 3496373494483544753}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: Battery LED
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36241,7 +36241,7 @@ GameObject:
   - component: {fileID: 7876023682488734197}
   - component: {fileID: 1221258855117058289}
   - component: {fileID: 5065847855221492934}
-  m_Layer: 3
+  m_Layer: 11
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}

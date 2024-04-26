@@ -18,7 +18,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
     [SerializeField] Light flashLight;
 
     
-    [SerializeField] private float interactionDistance = 10.0f;
+    [SerializeField] private float interactionDistance = 20.0f;
     [SerializeField] private LayerMask pickupLayer,wallLayer,doorLayer,interactableLayer,renderedLayer;
     [SerializeField] private GameObject guidanceText,doorDetectionText,beginResearchText;
     [SerializeField] private bool itemPickedUp=false;
@@ -334,13 +334,13 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
             AttachObjectToArm(hit.collider.gameObject);
 
-            hit.collider.gameObject.layer = LayerMask.NameToLayer("Rendered");
+           
             
 
         }
         else
         {
-           DetachObjectToArm(); hit.collider.gameObject.layer = LayerMask.NameToLayer("PickUp");
+           DetachObjectToArm(); 
 
         }
 
@@ -383,6 +383,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         AdjustTransformsBasedOnItemName(itemPicked);
         itemPicked.transform.localRotation= Quaternion.Euler(0,90,0); //Adjust as needed
 
+        
        
 
         currentItem = itemPicked;
@@ -396,7 +397,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
             // No need to check if itemPickedUp is false here, as it's already confirmed to be true
             currentItem.GetComponent<Collider>().isTrigger = false;
             currentItem.GetComponent<Rigidbody>().isKinematic = false;
-
+           
             if (currentItem.name == "Torch")//Turn off the torch
             {
                 flashLight.enabled = false;
@@ -421,7 +422,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         {
             case "Torch":
                
-                currentItem.transform.localPosition = new Vector3(0.146f, -0.488f, -0.115f);
+                currentItem.transform.localPosition = new Vector3(0.151f, -0.488f, -0.735f);
                 currentItem.transform.localRotation = Quaternion.Euler(0, 90, 0);
                
                 break;

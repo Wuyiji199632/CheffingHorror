@@ -337,9 +337,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
     private IEnumerator InteractWithStaticObjs()
     {
         yield return new WaitForSeconds(0.1f);
-
-       
-
+  
         RaycastHit hit;
 
         bool rayHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactionDistance, interactableLayer);

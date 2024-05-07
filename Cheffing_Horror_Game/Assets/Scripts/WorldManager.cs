@@ -26,14 +26,17 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
 
     public List<GameObject> alienSelections = new List<GameObject>();
 
-    public GameObject alienSelectionPage,alienMainProfilePage,alienProfilePage;
+    public GameObject alienSelectionPage,alienMainProfilePage,alienProfilePage,errorPage;
 
     private CameraMovement player;
 
 
     [SerializeField] private Button confirmSelectionBtn;
 
+    [SerializeField] private List<Button>  goBackButtons;
+
     public GameObject alienTube, alienSelected; //Alien to come up need further logics to pop in 
+
 
     private Animator alienPlatformAnim;
 
@@ -41,6 +44,9 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
 
     [SerializeField] private GameObject settingsMenuInGame;
 
+    [SerializeField] private AudioClip hoverClip,clickClip;
+
+   public AudioSource beginResearchAudio;
     private void Awake()
     {
         if (Instance == null)
@@ -76,13 +82,16 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
         player =GameObject.FindGameObjectWithTag("Player").GetComponent<CameraMovement>();            
 
         SoundManager.Instance.ChangeToInGameBGM(); alienSelectionPage.SetActive(false); alienMainProfilePage.SetActive(true); alienProfilePage.SetActive(false);
-
+        SoundManager.Instance.PlayNarrativeSound();SoundManager.Instance.PlayNarratorSoundAE();
+        errorPage.SetActive(false);
         //InvokeRepeating(nameof(SetCursorVisibility), 1, 1);
 
     }
 
     private void Update()
     {
+
+        if (player.playerDead) return;
         if (Input.GetKeyDown(KeyCode.Escape)&&!player.selectionPageOpened)
         {
             ManipulatePauseMenu();
@@ -91,11 +100,14 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
     }
     private void LateUpdate()
     {
+        if(player.playerDead) return;
         SetCursorVisibility();
     }
     private void SetCursorVisibility()
     {
-        Cursor.visible = paused || player.notepadOpened;
+        Cursor.visible = paused || player.notepadOpened||player.selectionPageOpened;
+
+       
     }
     private async Task ManipulatePauseMenu()
     {
@@ -182,7 +194,17 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
             confirmSelectionBtn.onClick.AddListener(()=> SoundManager.Instance.PlaySelectionSound());
         }
     }
-
+    public void PlayGoBackSound()
+    {
+       AudioSource audio = GetComponent<AudioSource>();
+        audio.clip = clickClip;
+        audio.Play();
+       
+    }
+    public void GoBackToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
     public void ShowItemInstruction(string itemName, bool showing)
     {
         if (displayedItemInfos.TryGetValue(itemName, out var itemInfo))
@@ -230,13 +252,16 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
         alienProfilePage.SetActive(true);
 
         alienMainProfilePage.SetActive(false);
+
+        SoundManager.Instance.PlayNarratorSoundGH();
     }
 
 
     public void ConfirmAlienSelection() //Need further updates as there are multiple aliens to select from. The logics of this should not be smplified
     {
         Debug.Log("Alien selection confirmed!");
-
+        SoundManager.Instance.PlayNarratorSoundI();
+        SoundManager.Instance.PlayFacilitySound();
         player.selectionPageOpened = false; alienSelectionPage.SetActive(player.selectionPageOpened);
 
         Time.timeScale = player.selectionPageOpened ? 0.0f : 1.0f;
@@ -259,9 +284,38 @@ public class WorldManager : MonoBehaviour //This is the class that controls the 
         pauseMenu.SetActive(true);
     }
 
-    public void GoBackToMainMenu() => SceneManager.LoadScene("MainMenu");
+    
 
+    public void GoBackToMainProfilePage()
+    {
+        alienProfilePage.SetActive(false);
+        alienMainProfilePage.SetActive(true);
+        errorPage.SetActive(false);
+        //PlayGoBackSound();
+    }
 
+    public void PlayGobackHoverSound()
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.clip = hoverClip;
+        audio.Play();
+    }
 
+    public void GoToErrorPage()
+    {
+        errorPage.SetActive(true);
+    }
+
+    public void ExitMainProfilePage()
+    {
+        alienSelectionPage.SetActive(false);
+        alienMainProfilePage.SetActive(false);
+        alienProfilePage.SetActive(false);
+        errorPage.SetActive(false);
+        player.selectionPageOpened = false;
+        SoundManager.Instance.StopSound();
+        Time.timeScale = 1.0f;
+
+    }
 
 }

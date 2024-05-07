@@ -13,6 +13,7 @@ TagManager:
   - Keyboard
   - Drawer
   - Keypad
+  - Locker
   layers:
   - Default
   - TransparentFX
@@ -27,12 +28,12 @@ TagManager:
   - Interactable
   - Rendered
   - Col
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - TorchRenderer
+  - DuckRenderer
+  - TaserRenderer
+  - SprayRenderer
+  - RecorderRenderer
+  - SpeakerRenderer
   - 
   - 
   - 

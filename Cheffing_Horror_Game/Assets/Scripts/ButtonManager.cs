@@ -31,6 +31,7 @@ public class ButtonManager : MonoBehaviour
         SoundManager.Instance.Play("BGM");
     }
 
+   
 
     public void PlayGame()
     {

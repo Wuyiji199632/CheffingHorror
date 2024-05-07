@@ -48,7 +48,7 @@ public class PickUpItem : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (this.name == "Rubber_Duck")
+        if (this.name == "Rubber_Duck"||this.name=="Sardine")
         {
             forwardSpeed=thrown ? 10 : 0.0f;
             Vector3 direction = transform.position - player.transform.position;
@@ -68,6 +68,11 @@ public class PickUpItem : MonoBehaviour
         {
             thrown = false;
         }
+
+        if (this.name == "Rubber_Duck")
+        {
+            PlayPinchSound();
+        }
     }
 
    
@@ -77,6 +82,11 @@ public class PickUpItem : MonoBehaviour
         {
             pickupAudio.clip = itemFunctionOn ? pickupAudioClips[0] : pickupAudioClips[1]; pickupAudio.Play();
         }
+    }
+
+    public void PlayPinchSound()
+    {
+        SoundManager.Instance.PlayPinchSound();
     }
 
 

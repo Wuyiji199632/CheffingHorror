@@ -4,12 +4,14 @@ using UnityEngine;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 public class CameraMovement : MonoBehaviour //The class that controls movement of the player
 {
     public float mouseSensitivity = 220f;
 
     public float movementSpeed = 10f;
+
     //public Transform playerBody;
     float xRotation=0,yRotation = 0f;
 
@@ -29,9 +31,23 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
     
     public  bool notepadOpened = false;
     public GameObject notepad;
-    [SerializeField] private GameObject pickupItemRenderCam;
-    public List<PickUpItem> pickUpItems = new List<PickUpItem>();
-    
+    [SerializeField] private GameObject torchRendererCam,duckRendererCam,taserRendererCam,sprayBottleCam,RecorderCam,SpeakerCam;
+    //public List<PickUpItem> pickUpItems = new List<PickUpItem>();
+
+    public Animator officeDoorAnim, labDoorAnim,lockerDoorAnim;
+
+    public BoxCollider torchCol,taserCol,sprayCol;
+
+    [Header("Water Alien Profile")]
+    public Image unrevealedProfile, revealedProfile;
+
+    private bool doormsgRevealed = false;
+
+    public AlienManager alienManager;
+
+    public GameObject deathPage;
+
+    public bool playerDead = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -39,27 +55,48 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         rb= GetComponent<Rigidbody>();  
         flashLight.enabled = false;
         guidanceText = GameObject.Find("GuidanceText");
-        
-        guidanceText.SetActive(false); doorDetectionText.SetActive(false);notepad.SetActive(false); pickupItemRenderCam.SetActive(false);
+        torchCol.enabled = false;
+        sprayCol.enabled = false;
+        guidanceText.SetActive(false); doorDetectionText.SetActive(false);notepad.SetActive(false); torchRendererCam.SetActive(false);
+        duckRendererCam.SetActive(false); taserRendererCam.SetActive(false);sprayBottleCam.SetActive(false);RecorderCam.SetActive(false);SpeakerCam.SetActive(false);
+        beginResearchText.SetActive(false);deathPage.SetActive(false);
        
     }
 
     // Update is called once per frame
     void Update()
     {
-        StartCoroutine(DetectObjectPickUps());StartCoroutine(ManipulateDoors());StartCoroutine(InteractWithStaticObjs());StartCoroutine(TakingNotesOnNotepad());
-        DetachObjectToArm();
+        if (WorldManager.Instance.paused) return;
+       
+        if (!playerDead)
+        {
+            if (WorldManager.Instance.paused) { return; }
+            StartCoroutine(DetectObjectPickUps()); StartCoroutine(ManipulateDoors()); StartCoroutine(InteractWithStaticObjs()); StartCoroutine(TakingNotesOnNotepad());
+            DetachObjectToArm();
+        }
+       
        
     }
 
     private void FixedUpdate()
     {
-        
-        UpdateMouseRotationMovement(); UpdateTranslationMovement();
+        if (WorldManager.Instance.paused) return;
+        if (!playerDead)
+        {
+            if (WorldManager.Instance.paused) { return; }
+            UpdateMouseRotationMovement(); UpdateTranslationMovement();
+        }
+       
     }
     private void LateUpdate()
     {
-        ToggleObjectFunctionalities(); WorldManager.Instance.StartCoroutine(WorldManager.Instance.PlayConfirmationSound());
+        if (WorldManager.Instance.paused) return;
+        if (!playerDead)
+        {
+            if (WorldManager.Instance.paused) { return; }
+            ToggleObjectFunctionalities(); WorldManager.Instance.StartCoroutine(WorldManager.Instance.PlayConfirmationSound());
+        }
+       
     }
 
     private void UpdateMouseRotationMovement()
@@ -84,6 +121,8 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
     private void UpdateTranslationMovement()
     {
+        if(alienManager.currentState==AlienManager.AlienState.State.Attack) { return; }
+
         float horizontalMovement = Input.GetAxis("Horizontal") * movementSpeed * Time.deltaTime;
         float verticalMovement = Input.GetAxis("Vertical") * movementSpeed * Time.deltaTime;
 
@@ -111,7 +150,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
                 {
                     flashLight.enabled = false; item.itemFunctionOn = false;
                 }
-
+                torchCol.enabled = flashLight.enabled;
                 item.PlayTorchSounds();
             }
 
@@ -135,7 +174,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
                     SoundManager.Instance.StopZappingSound();
                     
                 }
-
+                taserCol.enabled = item.itemFunctionOn;
                 AdjustTransformsBasedOnItemName(currentItem);
             }
 
@@ -143,15 +182,39 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
             {
                 Debug.Log("We need to throw the duck!");
 
-                ThrowDuck(currentItem);
+                Throw(currentItem);
             }
-           
-         
+            else if (currentItem.name == "Sardine")
+            {
+                Debug.Log("We need to throw the sardine!");
+
+                Throw(currentItem);
+            }
+
+            else if (currentItem.name == "Spray_Bottle")
+            {
+               
+                Spray();
+            }
+
+
         }
 
            
     }
-    private void ThrowDuck(GameObject currentItem)
+    private IEnumerator ToggleColliderForSpray()
+    {
+        sprayCol.enabled = true;
+        yield return new WaitForSeconds(1f);
+        sprayCol.enabled = false;
+    }
+    private void Spray()
+    {
+        SoundManager.Instance.PlaySpraySound();
+        StartCoroutine(ToggleColliderForSpray());
+        
+    }
+    private void Throw(GameObject currentItem)
     {
 
         // No need to check if itemPickedUp is false here, as it's already confirmed to be true
@@ -171,7 +234,8 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
     private IEnumerator DetectObjectPickUps()
     {
-
+        if (doormsgRevealed) yield break;
+       
         bool rayHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactionDistance, pickupLayer)&&!itemPickedUp&&!notepadOpened;
         if (rayHit && WorldManager.Instance.displayedItemInfos.ContainsKey(hit.collider.gameObject.name)) //Need to make sense that the name for the object of display info is the same as the object to pick up
         {
@@ -213,9 +277,11 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         if(rayHit)
         {
             Debug.Log("Time to do something for the door!");
-            doorDetectionText.GetComponent<TextMeshProUGUI>().text = hit.collider.gameObject.GetComponent<DoorObject>().opened? "Press TAB To Close Door" : "Press TAB To Open Door";
-            doorDetectionText.SetActive(true);
 
+          
+            doorDetectionText.GetComponent<TextMeshProUGUI>().text = hit.collider.gameObject.GetComponent<DoorObject>().opened ? "Press TAB To Close Door" : "Press TAB To Open Door";
+            doorDetectionText.SetActive(true);
+            doormsgRevealed = true;
             if (Input.GetKeyDown(KeyCode.Tab))
             {
                 hit.collider.gameObject.GetComponent<DoorObject>().opened = !hit.collider.gameObject.GetComponent<DoorObject>().opened;
@@ -223,22 +289,47 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
                
                 doorObject.PlayDoorSounds();
              
-                if (hit.collider.gameObject.GetComponent<DoorObject>().opened)
+                if(doorObject.officeDoor)
                 {
-                    hit.collider.gameObject.GetComponent<Animator>().SetTrigger("Open");
+                    if (hit.collider.gameObject.GetComponent<DoorObject>().opened)
+                    {
+                        officeDoorAnim.SetTrigger("Open");
+                    }
+                    else
+                    {
+                        officeDoorAnim.SetTrigger("Close");
+                    }
                 }
-                else
+                else if(doorObject.labDoor)
                 {
-                    hit.collider.gameObject.GetComponent<Animator>().SetTrigger("Close");
+                    if (hit.collider.gameObject.GetComponent<DoorObject>().opened)
+                    {
+                        labDoorAnim.SetTrigger("Open");
+                    }
+                    else
+                    {
+                        labDoorAnim.SetTrigger("Close");
+                    }
                 }
-
-                
+                else if(doorObject.lockerDoor)
+                {
+                    if (hit.collider.gameObject.GetComponent<DoorObject>().opened)
+                    {
+                        lockerDoorAnim.SetTrigger("Open");
+                    }
+                    else
+                    {
+                        lockerDoorAnim.SetTrigger("Close");
+                    }
+                }
+               
+              
             }
           
         }
         else
         {
-            doorDetectionText.SetActive(false);
+            doorDetectionText.SetActive(false);doormsgRevealed = false;
         }
     }
 
@@ -247,11 +338,12 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
     {
         yield return new WaitForSeconds(0.1f);
 
+       
 
         RaycastHit hit;
 
         bool rayHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactionDistance, interactableLayer);
-
+           
         if (rayHit)
         {
             Debug.Log("Time to begin research");
@@ -266,9 +358,9 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
                 if(Input.GetKeyDown(KeyCode.Tab))
                 {
-                    Debug.Log("Selected alien is coming up from the tube!");
+                   
                     WorldManager.Instance.alienComesUp = !WorldManager.Instance.alienComesUp;
-
+                    WorldManager.Instance.beginResearchAudio.Play();
                     StartCoroutine(WorldManager.Instance.AlienComesUpForInvestigation());
                 }
             }
@@ -280,9 +372,9 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
             if (Input.GetKeyDown(KeyCode.T))
             {
                
-                selectionPageOpened = !selectionPageOpened;
+                
+                PauseForAlienSelection();
 
-                                        
             }
             
         }
@@ -291,11 +383,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
             beginResearchText.SetActive(false); selectionPageOpened = false;
 
         }
-
-       
-        PauseForAlienSelection();
-
-       
+               
     }
 
     private IEnumerator TakingNotesOnNotepad()
@@ -316,6 +404,8 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
     }
     private void PauseForAlienSelection()
     {
+        selectionPageOpened = !selectionPageOpened;
+        SoundManager.Instance.PlayNarratorSoundF();
         Time.timeScale = selectionPageOpened ? 0.0f : 1.0f;
         Cursor.visible = selectionPageOpened ? true : false;
 
@@ -323,6 +413,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         Cursor.lockState = !selectionPageOpened&&!WorldManager.Instance.paused ? CursorLockMode.Locked : CursorLockMode.None;
 
         WorldManager.Instance.alienSelectionPage.SetActive(selectionPageOpened);
+        WorldManager.Instance.alienMainProfilePage.SetActive(selectionPageOpened);
     }
     private void TogglePickingUpItems(RaycastHit hit,bool isPickedUp)
     {
@@ -333,10 +424,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
             Debug.Log($"Picked up {hit.collider.gameObject.name}");
 
             AttachObjectToArm(hit.collider.gameObject);
-
-           
-            
-
+                     
         }
         else
         {
@@ -344,18 +432,71 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
         }
 
-       StartCoroutine(RenderItemPickedUpCorrectlyWhenPickedUp());
-
-
-       StartCoroutine(RenderItemPickedUpCorrectlyWhenNotPickedUp());
-
     }
 
     private IEnumerator RenderItemPickedUpCorrectlyWhenPickedUp()
     {
         yield return new WaitUntil(() => itemPickedUp);
 
-        pickupItemRenderCam.SetActive(itemPickedUp);
+        if(currentItem!=null)
+        {
+            switch(currentItem.name)
+            {
+                case "Torch":
+                    torchRendererCam.SetActive(true);
+                    taserRendererCam.SetActive(false);
+                    duckRendererCam.SetActive(false);
+                    sprayBottleCam.SetActive(false);
+                    RecorderCam.SetActive(false);
+                    SpeakerCam.SetActive(false);
+                    break;
+
+                case "Taser":
+                    taserRendererCam.SetActive(true);
+                    torchRendererCam.SetActive(false);
+                    duckRendererCam.SetActive(false);
+                    sprayBottleCam.SetActive(false);
+                    RecorderCam.SetActive(false);
+                    SpeakerCam.SetActive(false);
+                    break;
+
+                case "Rubber_Duck":
+                    duckRendererCam.SetActive(true);
+                    torchRendererCam.SetActive(false);
+                    taserRendererCam.SetActive(false);
+                    sprayBottleCam.SetActive(false);
+                    RecorderCam.SetActive(false);
+                    SpeakerCam.SetActive(false);
+                    break;
+                case "Spray_Bottle":
+                    sprayBottleCam.SetActive(true);
+                    duckRendererCam.SetActive(false);
+                    torchRendererCam.SetActive(false);
+                    taserRendererCam.SetActive(false);
+                    RecorderCam.SetActive(false);
+                    SpeakerCam.SetActive(false);
+                    break;
+
+                case "Recorder":
+                    RecorderCam.SetActive(true);
+                    sprayBottleCam.SetActive(false);
+                    duckRendererCam.SetActive(false);
+                    torchRendererCam.SetActive(false);
+                    taserRendererCam.SetActive(false);
+                    SpeakerCam.SetActive(false);
+                    break;
+
+                case "Speaker":
+                    SpeakerCam.SetActive(true);
+                    RecorderCam.SetActive(false);
+                    sprayBottleCam.SetActive(false);
+                    duckRendererCam.SetActive(false);
+                    torchRendererCam.SetActive(false);
+                    taserRendererCam.SetActive(false);
+                    break;
+             
+            }
+        }
 
         
 
@@ -363,11 +504,14 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
 
     private IEnumerator RenderItemPickedUpCorrectlyWhenNotPickedUp()
     {
-        yield return new WaitUntil(() => !itemPickedUp);
+        yield return null;
 
-        pickupItemRenderCam.SetActive(itemPickedUp);
-
-       
+        duckRendererCam.SetActive(false);
+        torchRendererCam.SetActive(false);
+        taserRendererCam.SetActive(false);
+        sprayBottleCam.SetActive(false);
+        RecorderCam.SetActive(false);
+        SpeakerCam.SetActive(false);
 
     }
 
@@ -381,12 +525,10 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         itemPicked.transform.parent = pickUpAttachPoint;
         itemPicked.transform.position = pickUpAttachPoint.position;
         AdjustTransformsBasedOnItemName(itemPicked);
-        itemPicked.transform.localRotation= Quaternion.Euler(0,90,0); //Adjust as needed
-
-        
-       
-
+        //itemPicked.transform.localRotation= Quaternion.Euler(0,90,0); //Adjust as needed   
         currentItem = itemPicked;
+
+        StartCoroutine(RenderItemPickedUpCorrectlyWhenPickedUp());
     }
 
     private void DetachObjectToArm()
@@ -395,9 +537,12 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         if (currentItem != null && itemPickedUp && Input.GetKeyDown(KeyCode.E))
         {
             // No need to check if itemPickedUp is false here, as it's already confirmed to be true
+            currentItem.GetComponent<Collider>().enabled = true;
             currentItem.GetComponent<Collider>().isTrigger = false;
             currentItem.GetComponent<Rigidbody>().isKinematic = false;
+
            
+            StartCoroutine(RenderItemPickedUpCorrectlyWhenNotPickedUp());
             if (currentItem.name == "Torch")//Turn off the torch
             {
                 flashLight.enabled = false;
@@ -426,20 +571,43 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
                 currentItem.transform.localRotation = Quaternion.Euler(0, 90, 0);
                
                 break;
-            case "Taser":                   
+            case "Taser":
+                currentItem.transform.localRotation = Quaternion.Euler(0, 90, 0);
                 currentItem.transform.localPosition = new Vector3(0, -0.7f,currentItem.GetComponent<PickUpItem>().itemFunctionOn?1.0f: 0);
                 currentItem.GetComponent<Collider>().isTrigger = true;
+                
                 break;
             case "Rubber_Duck":
                 currentItem.transform.localPosition = new Vector3(-0.4f, 0, -0.02f);
+                currentItem.transform.localRotation = Quaternion.Euler(0, 90, 0);
                 break;
-         
+            case "Spray_Bottle":
+               currentItem.transform.localRotation = Quaternion.Euler(-95, 90, -90);
+                
+                break;
+
             default:             
                 break;
         }
     }
 
-    
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.GetComponent<AlienFist>()!=null)
+        {
+            Debug.Log("Alien has hit the player!");
 
-   
+            movementSpeed = 0;
+            Time.timeScale = 0.0f;
+            deathPage.SetActive(true);
+            playerDead = true;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            SoundManager.Instance.RevertToStartBGM();
+            SoundManager.Instance.BGM_Narrative.Stop();
+            SoundManager.Instance.BGM_Narrator.Stop();
+         
+        }
+    }
+
 }

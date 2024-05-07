@@ -9,6 +9,9 @@ public class AlienManager : MonoBehaviour
 
     public AlienState.State currentState;
 
+    public CameraMovement playerComponent;
+
+    public bool hurt = false;
    public virtual void OnStateEnter() { }
 
    public virtual void OnStateStay() { }

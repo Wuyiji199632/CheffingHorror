@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BGM
   m_EditorClassIdentifier: 
   soundName: BGM
-  clip: {fileID: 8300000, guid: e71f93d187f7f09408a3a7fd4a52551d, type: 3}
+  clip: {fileID: 8300000, guid: 598589cd3afaa8e44bc217114c1467a5, type: 3}
   audioMixerGroup: {fileID: -3099742779656331926, guid: 09795c7db343a664abcf5ab63b493f92,
     type: 2}
   volume: 0.619

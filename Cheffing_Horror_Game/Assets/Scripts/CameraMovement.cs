@@ -26,6 +26,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
     [SerializeField] private bool itemPickedUp=false;
     [SerializeField] private Transform pickUpAttachPoint;
     [SerializeField] private GameObject currentItem;
+    [SerializeField] private GameObject tasingParticle;
     private const float backwardSpeed = 10.0f;
     public bool selectionPageOpened = false;
     
@@ -55,6 +56,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
         rb= GetComponent<Rigidbody>();  
         flashLight.enabled = false;
         guidanceText = GameObject.Find("GuidanceText");
+        tasingParticle.SetActive(false);
         torchCol.enabled = false;
         sprayCol.enabled = false;
         guidanceText.SetActive(false); doorDetectionText.SetActive(false);notepad.SetActive(false); torchRendererCam.SetActive(false);
@@ -175,6 +177,7 @@ public class CameraMovement : MonoBehaviour //The class that controls movement o
                     
                 }
                 taserCol.enabled = item.itemFunctionOn;
+                tasingParticle.SetActive(item.itemFunctionOn);
                 AdjustTransformsBasedOnItemName(currentItem);
             }
 
